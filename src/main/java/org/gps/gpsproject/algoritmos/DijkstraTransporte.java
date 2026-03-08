@@ -1,7 +1,8 @@
-package org.example.gpsproject.grafo;
+package org.gps.gpsproject.algoritmos;
 
-import org.example.gpsproject.modelo.Parada;
-import org.example.gpsproject.modelo.Ruta;
+import org.gps.gpsproject.grafo.GrafoTransporte;
+import org.gps.gpsproject.modelo.Parada;
+import org.gps.gpsproject.modelo.Ruta;
 
 import java.util.*;
 

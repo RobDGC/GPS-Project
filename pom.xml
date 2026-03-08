@@ -7,7 +7,7 @@
     <groupId>org.example</groupId>
     <artifactId>GPS-Project</artifactId>
     <version>1.0-SNAPSHOT</version>
-    <name>GPS-Project</name>
+    <name>org.gps.gpsproject.aplicacion.GPS-Project</name>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

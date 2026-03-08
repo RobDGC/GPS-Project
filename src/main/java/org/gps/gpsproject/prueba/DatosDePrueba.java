@@ -1,7 +1,7 @@
-package org.example.gpsproject.prueba;
+package org.gps.gpsproject.prueba;
 
-import org.example.gpsproject.grafo.GrafoTransporte;
-import org.example.gpsproject.modelo.Parada;
+import org.gps.gpsproject.grafo.GrafoTransporte;
+import org.gps.gpsproject.modelo.Parada;
 
 public class DatosDePrueba {
     public static void main(String[] args) {

@@ -1,4 +1,4 @@
-package org.example.gpsproject.modelo;
+package org.gps.gpsproject.modelo;
 
 public class Ruta {
     private Parada destino;

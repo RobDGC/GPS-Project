@@ -1,7 +1,7 @@
-package org.example.gpsproject.grafo;
+package org.gps.gpsproject.grafo;
 
-import org.example.gpsproject.modelo.Parada;
-import org.example.gpsproject.modelo.Ruta;
+import org.gps.gpsproject.modelo.Parada;
+import org.gps.gpsproject.modelo.Ruta;
 
 import java.util.ArrayList;
 import java.util.HashMap;

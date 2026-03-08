@@ -1,8 +1,8 @@
-module org.example.gpsproject {
+module org.gps.gpsproject {
     requires javafx.controls;
     requires javafx.fxml;
 
+    opens org.gps.gpsproject.controladores to javafx.fxml;
 
-    opens org.example.gpsproject to javafx.fxml;
-    exports org.example.gpsproject;
+    exports org.gps.gpsproject;
 }
