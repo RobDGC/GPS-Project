@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane prefHeight="623.0" prefWidth="1109.0"
+            style="-fx-background-color: #F0F0F5;"
+            xmlns="http://javafx.com/javafx/17.0.12"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="org.gps.gpsproject.controladores.ParadasControlador">
+
+    <children>
+
+        <Label layoutX="40.0" layoutY="30.0" text="Gestión de Paradas">
+            <font>
+                <Font name="Arial Bold" size="32.0"/>
+            </font>
+        </Label>
+
+        <Button layoutX="40.0" layoutY="100.0" text="Agregar Parada" prefWidth="200"/>
+
+        <Button layoutX="260.0" layoutY="100.0" text="Eliminar Parada" prefWidth="200"/>
+
+        <Button layoutX="480.0" layoutY="100.0" text="Modificar Parada" prefWidth="200"/>
+
+        <TableView layoutX="40.0" layoutY="180.0" prefWidth="1020.0" prefHeight="380.0">
+
+            <columns>
+
+                <TableColumn text="ID" prefWidth="100.0"/>
+
+                <TableColumn text="Nombre" prefWidth="250.0"/>
+
+                <TableColumn text="Latitud" prefWidth="200.0"/>
+
+                <TableColumn text="Longitud" prefWidth="200.0"/>
+
+                <TableColumn text="Descripción" prefWidth="270.0"/>
+
+            </columns>
+
+        </TableView>
+
+    </children>
+</AnchorPane>

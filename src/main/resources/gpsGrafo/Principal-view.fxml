@@ -4,63 +4,90 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane id="menuPanel" prefHeight="890.0" prefWidth="1230.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.gps.gpsproject.controladores.PrincipalControlador">
-   <children>
-      <Pane fx:id="panelCentral" layoutX="403.0" layoutY="117.0" prefHeight="772.0" prefWidth="1113.0" style="-fx-background-color: #737373;" />
-      <Pane fx:id="menuPanel" layoutX="-12.0" layoutY="-3.0" prefHeight="906.0" prefWidth="346.0" style="-fx-background-color: #2c3e50;">
-         <children>
-            <Label layoutX="65.0" layoutY="31.0" text="MENU PRINCIPAL" textFill="WHITE">
-               <font>
-                  <Font name="Arial Bold" size="25.0" />
-               </font>
-            </Label>
-            <Pane fx:id="panelCentral" layoutX="17.0" layoutY="133.0" prefHeight="91.0" prefWidth="313.0" style="-fx-background-color: white;">
-               <children>
-                  <Label layoutX="98.0" layoutY="28.0" text="🏠  Inicio">
-                     <font>
-                        <Font name="Arial" size="30.0" />
-                     </font>
-                  </Label>
-               </children>
-            </Pane>
-            <Pane layoutX="17.0" layoutY="248.0" prefHeight="91.0" prefWidth="313.0" style="-fx-background-color: white;">
-               <children>
-                  <Label layoutX="77.0" layoutY="28.0" text="📍  Paradas">
-                     <font>
-                        <Font name="Arial" size="30.0" />
-                     </font>
-                  </Label>
-               </children></Pane>
-            <Pane layoutX="17.0" layoutY="362.0" prefHeight="91.0" prefWidth="313.0" style="-fx-background-color: white;">
-               <children>
-                  <Label layoutX="94.0" layoutY="28.0" text="🔗  Rutas">
-                     <font>
-                        <Font name="Arial" size="30.0" />
-                     </font>
-                  </Label>
-               </children></Pane>
-            <Pane layoutX="16.0" layoutY="478.0" prefHeight="91.0" prefWidth="313.0" style="-fx-background-color: white;">
-               <children>
-                  <Label layoutX="50.0" layoutY="28.0" text="🔍  Buscar Ruta">
-                     <font>
-                        <Font name="Arial" size="30.0" />
-                     </font>
-                  </Label>
-               </children></Pane>
-            <Pane layoutX="17.0" layoutY="591.0" prefHeight="91.0" prefWidth="313.0" style="-fx-background-color: white;">
-               <children>
-                  <Label layoutX="60.0" layoutY="28.0" text="🗺   Ver Mapa">
-                     <font>
-                        <Font name="Arial" size="30.0" />
-                     </font>
-                  </Label>
-               </children></Pane>
-         </children>
-      </Pane>
-      <Label layoutX="758.0" layoutY="51.0" text="SISTEMA DE RUTAS GPS">
-         <font>
-            <Font name="Arial Bold" size="46.0" />
-         </font>
-      </Label>
-   </children>
+<AnchorPane prefHeight="890.0" prefWidth="1230.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.gps.gpsproject.controladores.PrincipalControlador">
+    <children>
+        <Pane fx:id="panelCentral" layoutX="360.0" layoutY="117.0" prefHeight="772.0" prefWidth="1157.0" style="-fx-background-color: #737373;">
+            <children>
+
+                <Pane fx:id="inicioVista" layoutX="31.0" layoutY="30.0" prefHeight="623.0" prefWidth="1109.0" style="-fx-background-color: F0F0F5;" />
+
+                <Pane fx:id="paradasVista" layoutX="31.0" layoutY="30.0" prefHeight="623.0" prefWidth="1109.0" style="-fx-background-color: F0F0F5;" visible="false" />
+
+                <Pane fx:id="rutasVista" layoutX="31.0" layoutY="30.0" prefHeight="623.0" prefWidth="1109.0" style="-fx-background-color: F0F0F5;" visible="false" />
+
+                <Pane fx:id="buscarVista" layoutX="31.0" layoutY="30.0" prefHeight="623.0" prefWidth="1109.0" style="-fx-background-color: F0F0F5;" visible="false" />
+
+                <Pane fx:id="mapaVista" layoutX="31.0" layoutY="30.0" prefHeight="623.0" prefWidth="1109.0" style="-fx-background-color: F0F0F5;" visible="false" />
+
+            </children>
+        </Pane>
+
+        <Pane fx:id="menuPanel" layoutX="-12.0" layoutY="-3.0" prefHeight="906.0" prefWidth="346.0" style="-fx-background-color: #2c3e50;">
+            <children>
+                <Label layoutX="65.0" layoutY="31.0" text="MENU PRINCIPAL" textFill="WHITE">
+                    <font>
+                        <Font name="Arial Bold" size="25.0" />
+                    </font>
+                </Label>
+
+                <Pane fx:id="inicioPanel" layoutX="17.0" layoutY="133.0" onMouseClicked="#mouseClicked" onMouseEntered="#mouseEntered" onMouseExited="#mouseExited" prefHeight="91.0" prefWidth="313.0" style="-fx-background-color: gray;">
+                    <children>
+                        <Label layoutX="98.0" layoutY="28.0" text="🏠  Inicio">
+                            <font>
+                                <Font name="Arial" size="30.0" />
+                            </font>
+                        </Label>
+                    </children>
+                </Pane>
+
+                <Pane fx:id="paradaPanel" layoutX="17.0" layoutY="248.0" onMouseClicked="#mouseClicked" onMouseEntered="#mouseEntered" onMouseExited="#mouseExited" prefHeight="91.0" prefWidth="313.0" style="-fx-background-color: white;">
+                    <children>
+                        <Label layoutX="77.0" layoutY="28.0" text="📍  Paradas">
+                            <font>
+                                <Font name="Arial" size="30.0" />
+                            </font>
+                        </Label>
+                    </children>
+                </Pane>
+
+                <Pane fx:id="rutaPanel" layoutX="17.0" layoutY="362.0" onMouseClicked="#mouseClicked" onMouseEntered="#mouseEntered" onMouseExited="#mouseExited" prefHeight="91.0" prefWidth="313.0" style="-fx-background-color: white;">
+                    <children>
+                        <Label layoutX="94.0" layoutY="28.0" text="🔗  Rutas">
+                            <font>
+                                <Font name="Arial" size="30.0" />
+                            </font>
+                        </Label>
+                    </children>
+                </Pane>
+
+                <Pane fx:id="buscarRutaPanel" layoutX="16.0" layoutY="478.0" onMouseClicked="#mouseClicked" onMouseEntered="#mouseEntered" onMouseExited="#mouseExited" prefHeight="91.0" prefWidth="313.0" style="-fx-background-color: white;">
+                    <children>
+                        <Label layoutX="50.0" layoutY="28.0" text="🔍  Buscar Ruta">
+                            <font>
+                                <Font name="Arial" size="30.0" />
+                            </font>
+                        </Label>
+                    </children>
+                </Pane>
+
+                <Pane fx:id="mapaPanel" layoutX="17.0" layoutY="591.0" onMouseClicked="#mouseClicked" onMouseEntered="#mouseEntered" onMouseExited="#mouseExited" prefHeight="91.0" prefWidth="313.0" style="-fx-background-color: white;">
+                    <children>
+                        <Label layoutX="60.0" layoutY="28.0" text="🗺   Ver Mapa">
+                            <font>
+                                <Font name="Arial" size="30.0" />
+                            </font>
+                        </Label>
+                    </children>
+                </Pane>
+
+            </children>
+        </Pane>
+
+        <Label layoutX="759.0" layoutY="47.0" text="Sistema de Rutas GPS" textFill="#515151">
+            <font>
+                <Font name="Arial Bold" size="46.0" />
+            </font>
+        </Label>
+
+    </children>
 </AnchorPane>
