@@ -12,32 +12,45 @@
 
     <children>
 
+        <!-- Título -->
         <Label layoutX="40.0" layoutY="30.0" text="Gestión de Paradas">
             <font>
                 <Font name="Arial Bold" size="32.0"/>
             </font>
         </Label>
 
-        <Button layoutX="40.0" layoutY="100.0" text="Agregar Parada" prefWidth="200"/>
+        <!-- Botones -->
+        <Button fx:id="btnAgregar"
+                layoutX="40.0"
+                layoutY="100.0"
+                prefWidth="200"
+                text="Agregar Parada" />
 
-        <Button layoutX="260.0" layoutY="100.0" text="Eliminar Parada" prefWidth="200"/>
+        <Button layoutX="260.0"
+                layoutY="100.0"
+                prefWidth="200"
+                text="Eliminar Parada" />
 
-        <Button layoutX="480.0" layoutY="100.0" text="Modificar Parada" prefWidth="200"/>
+        <Button layoutX="480.0"
+                layoutY="100.0"
+                prefWidth="200"
+                text="Modificar Parada" />
 
-        <TableView layoutX="40.0" layoutY="180.0" prefWidth="1020.0" prefHeight="380.0">
+        <!-- Tabla -->
+        <TableView fx:id="tableParadas"
+                   layoutX="40.0"
+                   layoutY="180.0"
+                   prefHeight="380.0"
+                   prefWidth="1020.0">
 
             <columns>
+                <TableColumn fx:id="colId"
+                             text="ID"
+                             prefWidth="100.0" />
 
-                <TableColumn text="ID" prefWidth="100.0"/>
-
-                <TableColumn text="Nombre" prefWidth="250.0"/>
-
-                <TableColumn text="Latitud" prefWidth="200.0"/>
-
-                <TableColumn text="Longitud" prefWidth="200.0"/>
-
-                <TableColumn text="Descripción" prefWidth="270.0"/>
-
+                <TableColumn fx:id="colNombre"
+                             text="Nombre"
+                             prefWidth="250.0" />
             </columns>
 
         </TableView>
