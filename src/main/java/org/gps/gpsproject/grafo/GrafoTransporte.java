@@ -1,5 +1,8 @@
 package org.gps.gpsproject.grafo;
 
+import com.brunomnsilva.smartgraph.graph.Digraph;
+import com.brunomnsilva.smartgraph.graph.DigraphEdgeList;
+import com.brunomnsilva.smartgraph.graph.Vertex;
 import org.gps.gpsproject.modelo.Parada;
 import org.gps.gpsproject.modelo.Ruta;
 
@@ -8,17 +11,34 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+
 public class GrafoTransporte {
 
+    private static GrafoTransporte instancia;
     private Map<Parada, List<Ruta>> grafo;
+
+    public static int paradaGen = 0;
 
     public GrafoTransporte() {
         grafo = new HashMap<>();
     }
 
+
+    public static GrafoTransporte getInstance() {
+        if (instancia == null) {
+            instancia = new GrafoTransporte();
+        }
+        return instancia;
+    }
+
     //Añade una parada solo si no se ha creado la parada anteriormente.
-    public void addParada(Parada aux){
+    public Parada addParada(String nombre){
+
+        Parada aux = new Parada("P"+paradaGen, nombre);
         grafo.putIfAbsent(aux, new ArrayList<>());// putIfAbsent solo agrega si no existe ya en el mapa.
+        paradaGen++;
+
+        return aux;
     }
 
     //Borra una parada y desvincula cualquier ruta de esa parada.
@@ -32,9 +52,6 @@ public class GrafoTransporte {
 
     //Agrega una ruta tomando en cuenta dos paradas
     public void addRuta(Parada origen, Parada destino, int tiempo, int costo,int distancia ,int transbordo){
-        //añade las paradas de origen y destino en caso de que no esten en el mapa
-        addParada(destino);
-        addParada(origen);
 
         //Crea la ruta y la inserta en la lista del del nodo origen, pero no en la lista de nodo destino para hacerlo dirigido
         Ruta r = new Ruta(destino, tiempo, distancia, costo,transbordo);
@@ -65,5 +82,27 @@ public class GrafoTransporte {
 
     public Map<Parada, List<Ruta>> getGrafo(){
         return grafo;
+    }
+
+    public Digraph<Parada, Ruta> toSmartGraph() {
+
+        Digraph<Parada, Ruta> smartGrafo = new DigraphEdgeList<>();
+
+        Map<Parada, Vertex<Parada>> vertices = new HashMap<>();
+
+        // Crear vértices
+        for (Parada p : grafo.keySet()) {
+            vertices.put(p, smartGrafo.insertVertex(p));
+        }
+
+        // Crear aristas DIRIGIDAS
+        for (Parada origen : grafo.keySet()) {
+            for (Ruta r : grafo.get(origen)) {
+                Parada destino = r.getDestino();
+                smartGrafo.insertEdge(vertices.get(origen), vertices.get(destino), r);
+            }
+        }
+
+        return smartGrafo;
     }
 }

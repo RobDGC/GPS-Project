@@ -1,14 +1,79 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="org.gps.gpsproject.controladores.RutasControlador"
-            prefHeight="400.0" prefWidth="600.0">
+<AnchorPane prefHeight="623.0" prefWidth="1109.0"
+            style="-fx-background-color: #F0F0F5;"
+            xmlns="http://javafx.com/javafx/17.0.12"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="org.gps.gpsproject.controladores.RutasControlador">
 
+    <children>
+
+        <!-- Título -->
+        <Label layoutX="40.0" layoutY="30.0" text="Gestión de Rutas">
+            <font>
+                <Font name="Arial Bold" size="32.0"/>
+            </font>
+        </Label>
+
+        <!-- Botones -->
+        <Button fx:id="btnAgregarRuta"
+                layoutX="40.0"
+                layoutY="100.0"
+                prefWidth="200"
+                text="Agregar Ruta"/>
+
+        <Button fx:id="btnEliminarRuta"
+                layoutX="260.0"
+                layoutY="100.0"
+                prefWidth="200"
+                text="Eliminar Ruta"/>
+
+        <Button fx:id="btnModificarRuta"
+                layoutX="480.0"
+                layoutY="100.0"
+                prefWidth="200"
+                text="Modificar Ruta"/>
+
+        <!-- Tabla -->
+        <TableView fx:id="tableRutas"
+                   layoutX="40.0"
+                   layoutY="180.0"
+                   prefHeight="380.0"
+                   prefWidth="1020.0">
+
+            <columns>
+
+                <TableColumn fx:id="colOrigen"
+                             text="Origen"
+                             prefWidth="160"/>
+
+                <TableColumn fx:id="colDestino"
+                             text="Destino"
+                             prefWidth="160"/>
+
+                <TableColumn fx:id="colTiempo"
+                             text="Tiempo"
+                             prefWidth="140"/>
+
+                <TableColumn fx:id="colDistancia"
+                             text="Distancia"
+                             prefWidth="140"/>
+
+                <TableColumn fx:id="colCosto"
+                             text="Costo"
+                             prefWidth="140"/>
+
+                <TableColumn fx:id="colTransbordo"
+                             text="Transbordo"
+                             prefWidth="160"/>
+
+            </columns>
+
+        </TableView>
+
+    </children>
 </AnchorPane>

@@ -2,6 +2,7 @@ module org.gps.gpsproject {
     requires javafx.controls;
     requires javafx.fxml;
     requires java.desktop;
+    requires smartgraph;
 
     opens org.gps.gpsproject.controladores to javafx.fxml;
 

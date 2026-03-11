@@ -10,50 +10,29 @@
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="org.gps.gpsproject.controladores.ParadasControlador">
 
-    <children>
+    <VBox spacing="20"
+          AnchorPane.topAnchor="30"
+          AnchorPane.leftAnchor="40"
+          AnchorPane.rightAnchor="40"
+          AnchorPane.bottomAnchor="20">
 
-        <!-- Título -->
-        <Label layoutX="40.0" layoutY="30.0" text="Gestión de Paradas">
-            <font>
-                <Font name="Arial Bold" size="32.0"/>
-            </font>
+        <Label text="Gestión de Paradas">
+            <font><Font name="Arial Bold" size="32.0"/></font>
         </Label>
 
-        <!-- Botones -->
-        <Button fx:id="btnAgregar"
-                layoutX="40.0"
-                layoutY="100.0"
-                prefWidth="200"
-                text="Agregar Parada" />
+        <HBox spacing="15">
+            <Button fx:id="btnAgregar" prefWidth="200" text="Agregar Parada"/>
+            <Button prefWidth="200" text="Eliminar Parada"/>
+            <Button prefWidth="200" text="Modificar Parada"/>
+        </HBox>
 
-        <Button layoutX="260.0"
-                layoutY="100.0"
-                prefWidth="200"
-                text="Eliminar Parada" />
-
-        <Button layoutX="480.0"
-                layoutY="100.0"
-                prefWidth="200"
-                text="Modificar Parada" />
-
-        <!-- Tabla -->
-        <TableView fx:id="tableParadas"
-                   layoutX="40.0"
-                   layoutY="180.0"
-                   prefHeight="380.0"
-                   prefWidth="1020.0">
-
+        <TableView fx:id="tableParadas" VBox.vgrow="ALWAYS" maxWidth="Infinity">
             <columns>
-                <TableColumn fx:id="colId"
-                             text="ID"
-                             prefWidth="100.0" />
-
-                <TableColumn fx:id="colNombre"
-                             text="Nombre"
-                             prefWidth="250.0" />
+                <TableColumn fx:id="colId" text="ID" prefWidth="100.0"/>
+                <TableColumn fx:id="colNombre" text="Nombre" prefWidth="250.0"/>
             </columns>
-
         </TableView>
 
-    </children>
+    </VBox>
+
 </AnchorPane>

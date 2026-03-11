@@ -1,14 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="org.gps.gpsproject.controladores.MapaControlador"
-            prefHeight="400.0" prefWidth="600.0">
+<AnchorPane prefHeight="600" prefWidth="900" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/17.0.12" fx:controller="org.gps.gpsproject.controladores.MapaControlador">
+
+    <children>
+
+        <AnchorPane fx:id="panelGrafo" layoutX="0" layoutY="0" prefHeight="550" prefWidth="900" style="-fx-background-color: F0F0F5;" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0" />
+
+        <Button layoutX="20" layoutY="560" onAction="#actualizarGrafo" text="Actualizar Grafo" />
+
+    </children>
 
 </AnchorPane>
