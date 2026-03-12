@@ -14,7 +14,6 @@
         <junit.version>5.12.1</junit.version>
     </properties>
 
-
     <dependencies>
         <dependency>
             <groupId>org.openjfx</groupId>
@@ -24,6 +23,16 @@
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-fxml</artifactId>
+            <version>21.0.6</version>
+        </dependency>
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-base</artifactId>
+            <version>21.0.6</version>
+        </dependency>
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-graphics</artifactId>
             <version>21.0.6</version>
         </dependency>
 
@@ -65,7 +74,6 @@
                 <version>0.0.8</version>
                 <executions>
                     <execution>
-                        <!-- Default configuration for running with: mvn clean javafx:run -->
                         <id>default-cli</id>
                         <configuration>
                             <mainClass>org.example.gpsproject/org.example.gpsproject.HelloApplication</mainClass>

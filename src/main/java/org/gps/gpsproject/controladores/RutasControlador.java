@@ -33,6 +33,7 @@ public class RutasControlador {
 
     @FXML
     private Button btnAgregarRuta;
+    @FXML private Button btnEliminarRuta;
 
     private ObservableList<RutaTabla> listaRutas = FXCollections.observableArrayList();
 
@@ -48,11 +49,28 @@ public class RutasControlador {
         colTransbordo.setCellValueFactory(new PropertyValueFactory<>("transbordo"));
         tableRutas.setItems(listaRutas);
         btnAgregarRuta.setOnAction(e -> agregarRuta());
-
-        cargarDatos(); // ← agregar
+        btnEliminarRuta.setOnAction(e -> eliminarRuta()); // ← agregar
+        cargarDatos();
     }
 
-    private void cargarDatos() {
+    private void eliminarRuta() {
+        RutaTabla seleccionada = tableRutas.getSelectionModel().getSelectedItem();
+
+        if (seleccionada == null) {
+            new Alert(Alert.AlertType.WARNING, "Selecciona una ruta para eliminar.").showAndWait();
+            return;
+        }
+
+        Parada origen  = buscarParada(seleccionada.getOrigen());
+        Parada destino = buscarParada(seleccionada.getDestino());
+
+        if (origen != null && destino != null) {
+            grafo.deleteRuta(origen, destino);
+            cargarDatos(); // ← en vez de listaRutas.remove()
+        }
+    }
+
+    public void cargarDatos() {
         listaRutas.clear();
         grafo.getGrafo().forEach((origen, rutas) -> {
             rutas.forEach(ruta -> {

@@ -20,23 +20,43 @@ public class PrincipalControlador {
     private Pane vistaParadas;
     private Pane vistaRutas;
     private Pane vistaMapa;
+
     private MapaControlador mapaControlador;
+    private RutasControlador rutasControlador;
+    private ParadasControlador paradasControlador;
 
     @FXML
     public void initialize() {
         panelSelected = inicioPanel;
         panelSelected.setStyle("-fx-background-color: gray;");
 
-        vistaInicio  = cargarVista("Inicio-view.fxml");
-        vistaParadas = cargarVista("Paradas-view.fxml");
-        vistaRutas   = cargarVista("Rutas-view.fxml");
+        vistaInicio = cargarVista("Inicio-view.fxml");
 
         try {
+            // Cargar Paradas
+            FXMLLoader loaderParadas = new FXMLLoader(getClass().getResource("/gpsGrafo/Paradas-view.fxml"));
+            vistaParadas = loaderParadas.load();
+            vistaParadas.prefWidthProperty().bind(subMenuPrincipal.widthProperty());
+            vistaParadas.prefHeightProperty().bind(subMenuPrincipal.heightProperty());
+            paradasControlador = loaderParadas.getController();
+
+            // Cargar Rutas
+            FXMLLoader loaderRutas = new FXMLLoader(getClass().getResource("/gpsGrafo/Rutas-view.fxml"));
+            vistaRutas = loaderRutas.load();
+            vistaRutas.prefWidthProperty().bind(subMenuPrincipal.widthProperty());
+            vistaRutas.prefHeightProperty().bind(subMenuPrincipal.heightProperty());
+            rutasControlador = loaderRutas.getController();
+
+            // Cargar Mapa
             FXMLLoader loaderMapa = new FXMLLoader(getClass().getResource("/gpsGrafo/Mapa-view.fxml"));
             vistaMapa = loaderMapa.load();
             vistaMapa.prefWidthProperty().bind(subMenuPrincipal.widthProperty());
             vistaMapa.prefHeightProperty().bind(subMenuPrincipal.heightProperty());
             mapaControlador = loaderMapa.getController();
+
+            // Conectar controladores
+            paradasControlador.setRutasControlador(rutasControlador);
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -68,7 +88,11 @@ public class PrincipalControlador {
 
         if (panel == inicioPanel)  mostrarVista(vistaInicio);
         if (panel == paradaPanel)  mostrarVista(vistaParadas);
-        if (panel == rutaPanel)    mostrarVista(vistaRutas);
+
+        if (panel == rutaPanel) {
+            mostrarVista(vistaRutas);
+            rutasControlador.cargarDatos(); // ← agregar
+        }
         if (panel == mapaPanel) {
             mostrarVista(vistaMapa);
             mapaControlador.refrescar();

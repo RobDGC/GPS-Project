@@ -4,32 +4,24 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane prefHeight="623.0" prefWidth="1109.0"
-            style="-fx-background-color: #F0F0F5;"
-            xmlns="http://javafx.com/javafx/17.0.12"
-            xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="org.gps.gpsproject.controladores.ParadasControlador">
+<AnchorPane prefHeight="623.0" prefWidth="1109.0" style="-fx-background-color: #F0F0F5;" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.gps.gpsproject.controladores.ParadasControlador">
 
-    <VBox spacing="20"
-          AnchorPane.topAnchor="30"
-          AnchorPane.leftAnchor="40"
-          AnchorPane.rightAnchor="40"
-          AnchorPane.bottomAnchor="20">
+    <VBox spacing="20" AnchorPane.bottomAnchor="20" AnchorPane.leftAnchor="40" AnchorPane.rightAnchor="40" AnchorPane.topAnchor="30">
 
         <Label text="Gestión de Paradas">
-            <font><Font name="Arial Bold" size="32.0"/></font>
+            <font><Font name="Arial Bold" size="32.0" /></font>
         </Label>
 
         <HBox spacing="15">
-            <Button fx:id="btnAgregar" prefWidth="200" text="Agregar Parada"/>
-            <Button prefWidth="200" text="Eliminar Parada"/>
-            <Button prefWidth="200" text="Modificar Parada"/>
+            <Button fx:id="btnAgregar" prefWidth="200" text="Agregar Parada" />
+            <Button fx:id="btnEliminar" prefWidth="200" text="Eliminar Parada" />
+            <Button prefWidth="200" text="Modificar Parada" />
         </HBox>
 
-        <TableView fx:id="tableParadas" VBox.vgrow="ALWAYS" maxWidth="Infinity">
+        <TableView fx:id="tableParadas" maxWidth="Infinity" VBox.vgrow="ALWAYS">
             <columns>
-                <TableColumn fx:id="colId" text="ID" prefWidth="100.0"/>
-                <TableColumn fx:id="colNombre" text="Nombre" prefWidth="250.0"/>
+                <TableColumn fx:id="colId" prefWidth="100.0" text="ID" />
+                <TableColumn fx:id="colNombre" prefWidth="250.0" text="Nombre" />
             </columns>
         </TableView>
 

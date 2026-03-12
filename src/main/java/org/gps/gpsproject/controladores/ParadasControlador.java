@@ -1,70 +1,77 @@
-    package org.gps.gpsproject.controladores;
+package org.gps.gpsproject.controladores;
 
-    import javafx.collections.FXCollections;
-    import javafx.collections.ObservableList;
-    import javafx.fxml.FXML;
-    import javafx.scene.control.*;
-    import javafx.scene.control.cell.PropertyValueFactory;
-    import javafx.scene.layout.AnchorPane;
-    import org.gps.gpsproject.grafo.GrafoTransporte;
-    import org.gps.gpsproject.modelo.Parada;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.fxml.FXML;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
+import org.gps.gpsproject.grafo.GrafoTransporte;
+import org.gps.gpsproject.modelo.Parada;
 
-    public class ParadasControlador {
+import java.util.ArrayList;
 
-        @FXML
-        private TableView<Parada> tableParadas;
+public class ParadasControlador {
 
-        @FXML
-        private TableColumn<Parada, String> colId;
+    @FXML private TableView<Parada> tableParadas;
+    @FXML private TableColumn<Parada, String> colId;
+    @FXML private TableColumn<Parada, String> colNombre;
+    @FXML private Button btnAgregar;
+    @FXML private Button btnEliminar;
 
-        @FXML
-        private TableColumn<Parada, String> colNombre;
+    private ObservableList<Parada> listaParadas = FXCollections.observableArrayList();
+    private GrafoTransporte grafo = GrafoTransporte.getInstance();
+    private RutasControlador rutasControlador;
 
-        @FXML
-        private Button btnAgregar;
-
-        private ObservableList<Parada> listaParadas = FXCollections.observableArrayList();
-
-        private GrafoTransporte grafo = GrafoTransporte.getInstance();
-
-        @FXML
-        public void initialize() {
-            colId.setCellValueFactory(new PropertyValueFactory<>("id"));
-            colNombre.setCellValueFactory(new PropertyValueFactory<>("nombre"));
-            tableParadas.setItems(listaParadas);
-            btnAgregar.setOnAction(e -> agregarParada());
-
-            cargarDatos(); // ← agregar
-        }
-
-        private void cargarDatos() {
-            listaParadas.clear();
-            listaParadas.addAll(grafo.getGrafo().keySet());
-        }
-
-        private void agregarParada() {
-
-            TextInputDialog dialog = new TextInputDialog();
-            dialog.setTitle("Agregar Parada");
-            dialog.setHeaderText("Ingrese el nombre de la parada");
-
-            dialog.showAndWait().ifPresent(nombre -> {
-
-                nombre = nombre.trim();
-
-                if(!nombre.isEmpty()){
-
-                    Parada nueva = grafo.addParada(nombre);
-
-                    listaParadas.add(nueva);
-
-                } else {
-
-                    Alert alert = new Alert(Alert.AlertType.ERROR,
-                            "El nombre no puede estar vacío.");
-                    alert.showAndWait();
-                }
-            });
-        }
-
+    public void setRutasControlador(RutasControlador rc) {
+        this.rutasControlador = rc;
     }
+
+    @FXML
+    public void initialize() {
+        colId.setCellValueFactory(new PropertyValueFactory<>("id"));
+        colNombre.setCellValueFactory(new PropertyValueFactory<>("nombre"));
+        tableParadas.setItems(listaParadas);
+        btnAgregar.setOnAction(e -> agregarParada());
+        btnEliminar.setOnAction(e -> eliminarParada());
+        cargarDatos();
+    }
+
+    private void eliminarParada() {
+        Parada seleccionada = tableParadas.getSelectionModel().getSelectedItem();
+
+        if (seleccionada == null) {
+            new Alert(Alert.AlertType.WARNING, "Selecciona una parada para eliminar.").showAndWait();
+            return;
+        }
+
+        grafo.deleteParada(seleccionada);
+
+        // En vez de remove(), recargar toda la lista
+        listaParadas.setAll(new ArrayList<>(grafo.getGrafo().keySet()));
+
+        if (rutasControlador != null) rutasControlador.cargarDatos();
+    }
+
+    private void agregarParada() {
+        TextInputDialog dialog = new TextInputDialog();
+        dialog.setTitle("Agregar Parada");
+        dialog.setHeaderText("Ingrese el nombre de la parada");
+
+        dialog.showAndWait().ifPresent(nombre -> {
+            nombre = nombre.trim();
+            if (!nombre.isEmpty()) {
+                Parada nueva = grafo.addParada(nombre);
+                listaParadas.add(nueva);
+            } else {
+                new Alert(Alert.AlertType.ERROR, "El nombre no puede estar vacío.").showAndWait();
+            }
+        });
+    }
+
+    private void cargarDatos() {
+        listaParadas.clear();
+        for (Parada p : grafo.getGrafo().keySet()) {
+            listaParadas.add(p);
+        }
+    }
+}
