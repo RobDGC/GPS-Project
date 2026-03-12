@@ -40,17 +40,32 @@ public class RutasControlador {
 
     @FXML
     public void initialize() {
-
         colOrigen.setCellValueFactory(new PropertyValueFactory<>("origen"));
         colDestino.setCellValueFactory(new PropertyValueFactory<>("destino"));
         colTiempo.setCellValueFactory(new PropertyValueFactory<>("tiempo"));
         colDistancia.setCellValueFactory(new PropertyValueFactory<>("distancia"));
         colCosto.setCellValueFactory(new PropertyValueFactory<>("costo"));
         colTransbordo.setCellValueFactory(new PropertyValueFactory<>("transbordo"));
-
         tableRutas.setItems(listaRutas);
-
         btnAgregarRuta.setOnAction(e -> agregarRuta());
+
+        cargarDatos(); // ← agregar
+    }
+
+    private void cargarDatos() {
+        listaRutas.clear();
+        grafo.getGrafo().forEach((origen, rutas) -> {
+            rutas.forEach(ruta -> {
+                listaRutas.add(new RutaTabla(
+                        origen.getId(),
+                        ruta.getDestino().getId(),
+                        ruta.getTiempo(),
+                        ruta.getDistancia(),
+                        ruta.getCosto(),
+                        ruta.getTransbordo()
+                ));
+            });
+        });
     }
 
     private void agregarRuta() {

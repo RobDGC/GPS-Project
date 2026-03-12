@@ -31,10 +31,15 @@
         public void initialize() {
             colId.setCellValueFactory(new PropertyValueFactory<>("id"));
             colNombre.setCellValueFactory(new PropertyValueFactory<>("nombre"));
-
             tableParadas.setItems(listaParadas);
-
             btnAgregar.setOnAction(e -> agregarParada());
+
+            cargarDatos(); // ← agregar
+        }
+
+        private void cargarDatos() {
+            listaParadas.clear();
+            listaParadas.addAll(grafo.getGrafo().keySet());
         }
 
         private void agregarParada() {

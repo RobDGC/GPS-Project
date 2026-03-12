@@ -5,11 +5,11 @@ import com.brunomnsilva.smartgraph.graph.DigraphEdgeList;
 import com.brunomnsilva.smartgraph.graph.Vertex;
 import org.gps.gpsproject.modelo.Parada;
 import org.gps.gpsproject.modelo.Ruta;
+import java.util.IdentityHashMap;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+
+
 
 
 public class GrafoTransporte {
@@ -87,19 +87,16 @@ public class GrafoTransporte {
     public Digraph<Parada, Ruta> toSmartGraph() {
 
         Digraph<Parada, Ruta> smartGrafo = new DigraphEdgeList<>();
-
         Map<Parada, Vertex<Parada>> vertices = new HashMap<>();
 
-        // Crear vértices
+
         for (Parada p : grafo.keySet()) {
             vertices.put(p, smartGrafo.insertVertex(p));
         }
 
-        // Crear aristas DIRIGIDAS
         for (Parada origen : grafo.keySet()) {
             for (Ruta r : grafo.get(origen)) {
-                Parada destino = r.getDestino();
-                smartGrafo.insertEdge(vertices.get(origen), vertices.get(destino), r);
+                smartGrafo.insertEdge(vertices.get(origen), vertices.get(r.getDestino()), r);
             }
         }
 

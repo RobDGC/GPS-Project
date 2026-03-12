@@ -2,15 +2,53 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-<AnchorPane prefHeight="600" prefWidth="900" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/17.0.12" fx:controller="org.gps.gpsproject.controladores.MapaControlador">
-
+<AnchorPane xmlns="http://javafx.com/javafx/17.0.12"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="org.gps.gpsproject.controladores.MapaControlador"
+            style="-fx-background-color: #F0F0F5;">
     <children>
 
-        <AnchorPane fx:id="panelGrafo" layoutX="0" layoutY="0" prefHeight="550" prefWidth="900" style="-fx-background-color: F0F0F5;" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0" />
+        <!-- Barra superior de controles -->
+        <HBox spacing="15"
+              AnchorPane.topAnchor="15"
+              AnchorPane.leftAnchor="15"
+              AnchorPane.rightAnchor="15"
+              alignment="CENTER_LEFT">
+            <children>
 
-        <Button layoutX="20" layoutY="560" onAction="#actualizarGrafo" text="Actualizar Grafo" />
+                <Label text="Origen:">
+                    <font><Font name="Arial Bold" size="14.0"/></font>
+                </Label>
+                <ComboBox fx:id="cbOrigen" prefWidth="160"/>
+
+                <Label text="Destino:">
+                    <font><Font name="Arial Bold" size="14.0"/></font>
+                </Label>
+                <ComboBox fx:id="cbDestino" prefWidth="160"/>
+
+                <Label text="Filtro:">
+                    <font><Font name="Arial Bold" size="14.0"/></font>
+                </Label>
+                <ComboBox fx:id="cbFiltro" prefWidth="140"/>
+
+                <Button fx:id="btnBuscar"
+                        text="🔍 Buscar Ruta"
+                        onAction="#buscarRuta"
+                        prefWidth="150"
+                        style="-fx-background-color: #2c3e50; -fx-text-fill: white; -fx-font-size: 14px; -fx-cursor: hand;"/>
+
+            </children>
+        </HBox>
+
+        <!-- Panel del grafo -->
+        <AnchorPane fx:id="panelGrafo"
+                    style="-fx-background-color: #F0F0F5;"
+                    AnchorPane.topAnchor="65"
+                    AnchorPane.leftAnchor="0"
+                    AnchorPane.rightAnchor="0"
+                    AnchorPane.bottomAnchor="0"/>
 
     </children>
-
 </AnchorPane>

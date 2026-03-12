@@ -19,43 +19,17 @@ public class Ruta {
 
     @Override
     public String toString() {
-        return tiempo + "min | $" + costo;
+        return switch (FiltroActual.getFiltro()) {
+            case "Distancia"  -> distancia + " km";
+            case "Costo"      -> "$" + costo;
+            case "Transbordo" -> transbordo + " transbordos";
+            default           -> tiempo + " min";
+        };
     }
 
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (!(obj instanceof Ruta)) return false;
-        Ruta r = (Ruta) obj;
-        return destino.equals(r.destino) &&
-                tiempo == r.tiempo &&
-                costo == r.costo &&
-                distancia == r.distancia &&
-                transbordo == r.transbordo;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(destino, tiempo, costo, distancia, transbordo);
-    }
-
-    public Parada getDestino() {
-        return destino;
-    }
-
-    public int getTiempo() {
-        return tiempo;
-    }
-
-    public int getDistancia() {
-        return distancia;
-    }
-
-    public int getCosto() {
-        return costo;
-    }
-
-    public int getTransbordo() {
-        return transbordo;
-    }
+    public Parada getDestino() { return destino; }
+    public int getTiempo()     { return tiempo; }
+    public int getDistancia()  { return distancia; }
+    public int getCosto()      { return costo; }
+    public int getTransbordo() { return transbordo; }
 }
