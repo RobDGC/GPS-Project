@@ -7,8 +7,7 @@ import org.gps.gpsproject.modelo.Parada;
 import org.gps.gpsproject.modelo.Ruta;
 
 import java.util.*;
-
-
+import java.util.concurrent.atomic.AtomicInteger;
 
 
 public class GrafoTransporte {
@@ -16,7 +15,7 @@ public class GrafoTransporte {
     private static GrafoTransporte instancia;
     private Map<Parada, List<Ruta>> grafo;
 
-    public static int paradaGen = 0;
+    public static AtomicInteger paradaGen = new AtomicInteger(); // manejarlo con atomic para mejorar recurrencia
 
     public GrafoTransporte() {
         grafo = new HashMap<>();
@@ -33,10 +32,8 @@ public class GrafoTransporte {
     //Añade una parada solo si no se ha creado la parada anteriormente.
     public Parada addParada(String nombre){
 
-        Parada aux = new Parada("P"+paradaGen, nombre);
+        Parada aux = new Parada("P"+paradaGen.incrementAndGet(), nombre);
         grafo.putIfAbsent(aux, new ArrayList<>());// putIfAbsent solo agrega si no existe ya en el mapa.
-        paradaGen++;
-
         return aux;
     }
 
@@ -50,7 +47,7 @@ public class GrafoTransporte {
     }
 
     //Agrega una ruta tomando en cuenta dos paradas
-    public void addRuta(Parada origen, Parada destino, int tiempo, int costo,int distancia ,int transbordo){
+    public void addRuta(Parada origen, Parada destino, double tiempo, double costo,double distancia ,int transbordo){
 
         //Crea la ruta y la inserta en la lista del del nodo origen, pero no en la lista de nodo destino para hacerlo dirigido
         Ruta r = new Ruta(destino, tiempo, distancia, costo,transbordo);

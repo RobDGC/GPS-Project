@@ -20,13 +20,13 @@ public class RutasControlador {
     private TableColumn<RutaTabla, String> colDestino;
 
     @FXML
-    private TableColumn<RutaTabla, Integer> colTiempo;
+    private TableColumn<RutaTabla, Double> colTiempo;
 
     @FXML
-    private TableColumn<RutaTabla, Integer> colDistancia;
+    private TableColumn<RutaTabla, Double> colDistancia;
 
     @FXML
-    private TableColumn<RutaTabla, Integer> colCosto;
+    private TableColumn<RutaTabla, Double> colCosto;
 
     @FXML
     private TableColumn<RutaTabla, Integer> colTransbordo;
@@ -104,9 +104,9 @@ public class RutasControlador {
                     String idOrigen = partes[0].trim();
                     String idDestino = partes[1].trim();
 
-                    int tiempo = Integer.parseInt(partes[2].trim());
-                    int distancia = Integer.parseInt(partes[3].trim());
-                    int costo = Integer.parseInt(partes[4].trim());
+                    double tiempo = Double.parseDouble(partes[2].trim());
+                    double distancia = Double.parseDouble(partes[3].trim());
+                    double costo = Double.parseDouble(partes[4].trim());
                     int transbordo = Integer.parseInt(partes[5].trim());
 
                     Parada origen = buscarParada(idOrigen);
@@ -164,12 +164,12 @@ public class RutasControlador {
 
         private String origen;
         private String destino;
-        private int tiempo;
-        private int distancia;
-        private int costo;
+        private double tiempo;
+        private double distancia;
+        private double costo;
         private int transbordo;
 
-        public RutaTabla(String origen, String destino, int tiempo, int distancia, int costo, int transbordo) {
+        public RutaTabla(String origen, String destino, double tiempo, double distancia, double costo, int transbordo) {
             this.origen = origen;
             this.destino = destino;
             this.tiempo = tiempo;
@@ -186,15 +186,15 @@ public class RutasControlador {
             return destino;
         }
 
-        public int getTiempo() {
+        public double getTiempo() {
             return tiempo;
         }
 
-        public int getDistancia() {
+        public double getDistancia() {
             return distancia;
         }
 
-        public int getCosto() {
+        public double getCosto() {
             return costo;
         }
 

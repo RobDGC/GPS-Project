@@ -6,7 +6,7 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import org.gps.gpsproject.prueba.DatosDePrueba;
 
-public class Launcher extends Application {
+public class    Launcher extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {

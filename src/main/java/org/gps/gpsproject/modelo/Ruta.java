@@ -4,12 +4,12 @@ import java.util.Objects;
 
 public class Ruta {
     private Parada destino;
-    private int tiempo;
-    private int distancia;
-    private int costo;
+    private double tiempo;
+    private double distancia;
+    private double costo;
     private int transbordo;
 
-    public Ruta(Parada destino, int tiempo, int distancia, int costo, int transbordo) {
+    public Ruta(Parada destino, double tiempo, double distancia, double costo, int transbordo) {
         this.destino = destino;
         this.tiempo = tiempo;
         this.distancia = distancia;
@@ -28,8 +28,8 @@ public class Ruta {
     }
 
     public Parada getDestino() { return destino; }
-    public int getTiempo()     { return tiempo; }
-    public int getDistancia()  { return distancia; }
-    public int getCosto()      { return costo; }
+    public double getTiempo()     { return tiempo; }
+    public double getDistancia()  { return distancia; }
+    public double getCosto()      { return costo; }
     public int getTransbordo() { return transbordo; }
 }
