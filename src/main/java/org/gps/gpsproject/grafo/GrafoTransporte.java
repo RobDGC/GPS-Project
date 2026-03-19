@@ -7,8 +7,7 @@ import org.gps.gpsproject.modelo.Parada;
 import org.gps.gpsproject.modelo.Ruta;
 
 import java.util.*;
-
-
+import java.util.concurrent.atomic.AtomicInteger;
 
 
 public class GrafoTransporte {
@@ -16,9 +15,9 @@ public class GrafoTransporte {
     private static GrafoTransporte instancia;
     private Map<Parada, List<Ruta>> grafo;
 
-    private static int paradaGen = 0;
+    public static AtomicInteger paradaGen = new AtomicInteger(); // manejarlo con atomic para mejorar recurrencia
 
-    private GrafoTransporte() {
+    public GrafoTransporte() {
         grafo = new HashMap<>();
     }
 
@@ -33,10 +32,8 @@ public class GrafoTransporte {
     //Añade una parada solo si no se ha creado la parada anteriormente.
     public Parada addParada(String nombre){
 
-        Parada aux = new Parada("P"+paradaGen, nombre);
+        Parada aux = new Parada("P"+paradaGen.incrementAndGet(), nombre);
         grafo.putIfAbsent(aux, new ArrayList<>());// putIfAbsent solo agrega si no existe ya en el mapa.
-        paradaGen++;
-
         return aux;
     }
 
@@ -50,7 +47,7 @@ public class GrafoTransporte {
     }
 
     //Agrega una ruta tomando en cuenta dos paradas
-    public void addRuta(Parada origen, Parada destino, int tiempo, int costo,int distancia ,int transbordo){
+    public void addRuta(Parada origen, Parada destino, double tiempo, double costo,double distancia ,int transbordo){
 
         //Crea la ruta y la inserta en la lista del del nodo origen, pero no en la lista de nodo destino para hacerlo dirigido
         Ruta r = new Ruta(destino, tiempo, distancia, costo,transbordo);
@@ -59,7 +56,9 @@ public class GrafoTransporte {
 
     //Elimina una ruta entre un nodo Origen y destino
     public void deleteRuta(Parada origen, Parada destino){
-        grafo.get(origen).removeIf(ruta -> ruta.getDestino().equals(destino)); //Elimina de la lista de ruta de origen si coincide con el destino
+        if(grafo.containsKey(origen)){//Verifica que el mapa contenga el origen que se quiere eliminar
+            grafo.get(origen).removeIf(ruta -> ruta.getDestino().equals(destino)); //Elimina de la lista de ruta de origen si coincide con el destino
+        }
     }
 
     //Devuelve la lista de vecinos que tiene una parada
@@ -67,7 +66,7 @@ public class GrafoTransporte {
         return grafo.getOrDefault(aux, new ArrayList<>()); //Si aux existe, retorna los vecinos de aux. En caso contrario una lista vacia.
     }
 
-    //Comprueba si existe una ruta directa entre el origen y el destino
+    //Comprueba si existe una ruta directa entre el origen y la parada
     public boolean existeRuta(Parada origen, Parada destino){
         if(!grafo.containsKey(origen)) return false;
 

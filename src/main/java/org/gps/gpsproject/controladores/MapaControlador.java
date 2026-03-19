@@ -13,7 +13,7 @@ import org.gps.gpsproject.grafo.GrafoTransporte;
 import org.gps.gpsproject.modelo.FiltroActual;
 import org.gps.gpsproject.modelo.Parada;
 import org.gps.gpsproject.modelo.Ruta;
-
+import org.gps.gpsproject.modelo.Criterio;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -118,12 +118,12 @@ public class MapaControlador {
         FiltroActual.setFiltro(filtro);
         construirGrafo();
 
-        DijkstraTransporte.Criterio criterio = switch (filtro) {
-            case "Tiempo"     -> DijkstraTransporte.Criterio.TIEMPO;
-            case "Distancia"  -> DijkstraTransporte.Criterio.DISTANCIA;
-            case "Costo"      -> DijkstraTransporte.Criterio.COSTO;
-            case "Transbordo" -> DijkstraTransporte.Criterio.TRANSBORDOS;
-            default           -> DijkstraTransporte.Criterio.TIEMPO;
+        Criterio criterio = switch (filtro) {
+            case "Tiempo"     -> Criterio.TIEMPO;
+            case "Distancia"  -> Criterio.DISTANCIA;
+            case "Costo"      -> Criterio.COSTO;
+            case "Transbordo" -> Criterio.TRANSBORDOS;
+            default           -> Criterio.TIEMPO;
         };
 
         List<Parada> camino = DijkstraTransporte.caminoMasCorto(grafo, origen, destino, criterio);
