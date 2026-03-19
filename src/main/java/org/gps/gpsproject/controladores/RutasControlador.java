@@ -66,7 +66,7 @@ public class RutasControlador {
 
         if (origen != null && destino != null) {
             grafo.deleteRuta(origen, destino);
-            cargarDatos(); // ← en vez de listaRutas.remove()
+            cargarDatos();
         }
     }
 

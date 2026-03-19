@@ -16,9 +16,9 @@ public class GrafoTransporte {
     private static GrafoTransporte instancia;
     private Map<Parada, List<Ruta>> grafo;
 
-    public static int paradaGen = 0;
+    private static int paradaGen = 0;
 
-    public GrafoTransporte() {
+    private GrafoTransporte() {
         grafo = new HashMap<>();
     }
 
@@ -59,9 +59,7 @@ public class GrafoTransporte {
 
     //Elimina una ruta entre un nodo Origen y destino
     public void deleteRuta(Parada origen, Parada destino){
-        if(grafo.containsKey(origen)){//Verifica que el mapa contenga el origen que se quiere eliminar
-            grafo.get(origen).removeIf(ruta -> ruta.getDestino().equals(destino)); //Elimina de la lista de ruta de origen si coincide con el destino
-        }
+        grafo.get(origen).removeIf(ruta -> ruta.getDestino().equals(destino)); //Elimina de la lista de ruta de origen si coincide con el destino
     }
 
     //Devuelve la lista de vecinos que tiene una parada
@@ -69,7 +67,7 @@ public class GrafoTransporte {
         return grafo.getOrDefault(aux, new ArrayList<>()); //Si aux existe, retorna los vecinos de aux. En caso contrario una lista vacia.
     }
 
-    //Comprueba si existe una ruta directa entre el origen y la parada
+    //Comprueba si existe una ruta directa entre el origen y el destino
     public boolean existeRuta(Parada origen, Parada destino){
         if(!grafo.containsKey(origen)) return false;
 
