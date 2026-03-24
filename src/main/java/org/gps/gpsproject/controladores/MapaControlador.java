@@ -8,7 +8,7 @@ import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.layout.AnchorPane;
-import org.gps.gpsproject.algoritmos.DijkstraTransporte;
+import org.gps.gpsproject.algoritmos.Dijkstra;
 import org.gps.gpsproject.grafo.GrafoTransporte;
 import org.gps.gpsproject.modelo.FiltroActual;
 import org.gps.gpsproject.modelo.Parada;
@@ -126,7 +126,7 @@ public class MapaControlador {
             default           -> Criterio.TIEMPO;
         };
 
-        List<Parada> camino = DijkstraTransporte.caminoMasCorto(grafo, origen, destino, criterio);
+        List<Parada> camino = Dijkstra.caminoMasCorto(grafo, origen, destino, criterio);
 
         if (camino.isEmpty()) {
             System.out.println("No hay camino entre " + origen + " y " + destino);
