@@ -24,7 +24,7 @@ public class ResultadoDijkstra {
     public List<Parada> getCaminos(Parada destino) {
         List<Parada> camino = new ArrayList<>();
 
-        if (!aristas.containsKey(destino) || aristas.get(destino) == Integer.MAX_VALUE) {
+        if (!aristas.containsKey(destino) || aristas.get(destino) == Double.MAX_VALUE) {
             return camino; // No hay camino
         }
 

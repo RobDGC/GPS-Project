@@ -6,7 +6,7 @@ import org.gps.gpsproject.modelo.Ruta;
 import java.util.*;
 import org.gps.gpsproject.modelo.Criterio;
 
-public class DijkstraTransporte {
+public class Dijkstra {
 
     // Nodo auxiliar para la cola de prioridad
     private static class NodoPrioridad implements Comparable<NodoPrioridad> {
