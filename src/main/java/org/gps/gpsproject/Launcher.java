@@ -4,6 +4,7 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import org.gps.gpsproject.gestorDatos.GestorDatos;
 import org.gps.gpsproject.prueba.DatosDePrueba;
 
 public class    Launcher extends Application {
@@ -11,8 +12,8 @@ public class    Launcher extends Application {
     @Override
     public void start(Stage stage) throws Exception {
 
-        DatosDePrueba.cargarDatos(); // ← carga los datos antes de mostrar la ventana
-
+       // DatosDePrueba.cargarDatos(); //  carga los datos antes de mostrar la ventana
+        GestorDatos.load();
         FXMLLoader loader = new FXMLLoader(
                 getClass().getResource("/gpsGrafo/Principal-view.fxml")
         );
@@ -23,7 +24,7 @@ public class    Launcher extends Application {
         stage.setScene(scene);
 
         stage.setMaximized(true);
-
+        stage.setOnCloseRequest(e -> GestorDatos.save());
         stage.show();
     }
 
