@@ -4,9 +4,11 @@ import com.brunomnsilva.smartgraph.graph.Digraph;
 import com.brunomnsilva.smartgraph.graphview.SmartGraphPanel;
 import com.brunomnsilva.smartgraph.graphview.SmartGraphProperties;
 import com.brunomnsilva.smartgraph.graphview.SmartRandomPlacementStrategy;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import org.gps.gpsproject.algoritmos.Dijkstra;
 import org.gps.gpsproject.grafo.GrafoTransporte;
@@ -26,10 +28,18 @@ public class MapaControlador {
     @FXML private ComboBox<Parada> cbOrigen;
     @FXML private ComboBox<Parada> cbDestino;
     @FXML private ComboBox<String> cbFiltro;
+    // Agregar estos @FXML en MapaControlador
+    @FXML private Label lblRuta;
+    @FXML private Label lblTiempo;
+    @FXML private Label lblDistancia;
+    @FXML private Label lblCosto;
+    @FXML private Label lblTransbordo;
+    @FXML private Label lblConexo;
 
     private Map<Parada, double[]> posicionesGuardadas = new HashMap<>();
     private SmartGraphPanel<Parada, Ruta> graphViewActual;
     private Digraph<Parada, Ruta> smartGraphActual;
+    private boolean esConexo = true;
 
     private GrafoTransporte grafo = GrafoTransporte.getInstance();
 
@@ -75,25 +85,32 @@ public class MapaControlador {
             this.graphViewActual = graphView;
             this.smartGraphActual = smartGraph;
 
-            javafx.application.Platform.runLater(() -> {
-                graphView.init();
-
-                if (!posicionesGuardadas.isEmpty()) {
-                    smartGraph.vertices().forEach(v -> {
-                        Parada p = v.element();
-                        if (posicionesGuardadas.containsKey(p)) {
-                            double[] pos = posicionesGuardadas.get(p);
-                            graphView.setVertexPosition(v, pos[0], pos[1]);
-                        }
-                    });
-                }
-
-                graphView.setOnMouseReleased(e -> guardarPosiciones(graphViewActual));
+            // Doble runLater: primero espera la escena, luego espera el layout
+            Platform.runLater(() -> {
+                Platform.runLater(() -> {
+                    Platform.runLater(() -> inicializarGraphView(graphView));
+                });
             });
 
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private void inicializarGraphView(SmartGraphPanel<Parada, Ruta> graphView) {
+        graphView.init();
+
+        if (!posicionesGuardadas.isEmpty()) {
+            smartGraphActual.vertices().forEach(v -> {
+                Parada p = v.element();
+                if (posicionesGuardadas.containsKey(p)) {
+                    double[] pos = posicionesGuardadas.get(p);
+                    graphView.setVertexPosition(v, pos[0], pos[1]);
+                }
+            });
+        }
+
+        graphView.setOnMouseReleased(e -> guardarPosiciones(graphViewActual));
     }
 
     private void guardarPosiciones(SmartGraphPanel<Parada, Ruta> graphView) {
@@ -134,6 +151,34 @@ public class MapaControlador {
         }
 
         javafx.application.Platform.runLater(() -> resaltarCamino(camino));
+        // Calcular totales recorriendo el camino
+        double totalTiempo = 0, totalDistancia = 0, totalCosto = 0;
+        int totalTransbordo = 0;
+
+        for (int i = 0; i < camino.size() - 1; i++) {
+            Parada a = camino.get(i);
+            Parada b = camino.get(i + 1);
+            for (Ruta r : grafo.getVecinos(a)) {
+                if (r.getDestino().equals(b)) {
+                    totalTiempo     += r.getTiempo();
+                    totalDistancia  += r.getDistancia();
+                    totalCosto      += r.getCosto();
+                    totalTransbordo += r.getTransbordo();
+                    break;
+                }
+            }
+        }
+
+        String rutaTexto = camino.stream()
+                .map(Parada::getNombre)
+                .collect(java.util.stream.Collectors.joining(" → "));
+
+
+        lblRuta.setText(rutaTexto);
+        lblTiempo.setText(totalTiempo + " min");
+        lblDistancia.setText(totalDistancia + " km");
+        lblCosto.setText("$" + totalCosto);
+        lblTransbordo.setText(String.valueOf(totalTransbordo));
     }
 
     private void resaltarCamino(List<Parada> camino) {

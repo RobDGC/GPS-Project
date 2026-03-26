@@ -10,7 +10,6 @@
             style="-fx-background-color: #F0F0F5;">
     <children>
 
-        <!-- Barra superior de controles -->
         <HBox spacing="15"
               AnchorPane.topAnchor="15"
               AnchorPane.leftAnchor="15"
@@ -42,13 +41,83 @@
             </children>
         </HBox>
 
-        <!-- Panel del grafo -->
+
         <AnchorPane fx:id="panelGrafo"
                     style="-fx-background-color: #F0F0F5;"
                     AnchorPane.topAnchor="65"
                     AnchorPane.leftAnchor="0"
                     AnchorPane.rightAnchor="0"
-                    AnchorPane.bottomAnchor="0"/>
+                    AnchorPane.bottomAnchor="110"/>
+
+        <HBox fx:id="panelResultados"
+              spacing="30"
+              alignment="CENTER_LEFT"
+              AnchorPane.bottomAnchor="10"
+              AnchorPane.leftAnchor="15"
+              AnchorPane.rightAnchor="15"
+              style="-fx-background-color: white; -fx-border-color: #dcdcdc; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 12 20 12 20;">
+            <children>
+
+                <!-- Ruta -->
+                <VBox spacing="3">
+                    <Label text="Ruta" style="-fx-font-size: 11px; -fx-text-fill: #888;"/>
+                    <Label fx:id="lblRuta"
+                           text="—"
+                           style="-fx-font-size: 13px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+                </VBox>
+
+                <Separator orientation="VERTICAL"/>
+
+                <!-- Tiempo -->
+                <VBox spacing="3">
+                    <Label text="Tiempo" style="-fx-font-size: 11px; -fx-text-fill: #888;"/>
+                    <Label fx:id="lblTiempo"
+                           text="—"
+                           style="-fx-font-size: 13px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+                </VBox>
+
+                <Separator orientation="VERTICAL"/>
+
+                <!-- Distancia -->
+                <VBox spacing="3">
+                    <Label text="Distancia" style="-fx-font-size: 11px; -fx-text-fill: #888;"/>
+                    <Label fx:id="lblDistancia"
+                           text="—"
+                           style="-fx-font-size: 13px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+                </VBox>
+
+                <Separator orientation="VERTICAL"/>
+
+                <!-- Costo -->
+                <VBox spacing="3">
+                    <Label text="Costo" style="-fx-font-size: 11px; -fx-text-fill: #888;"/>
+                    <Label fx:id="lblCosto"
+                           text="—"
+                           style="-fx-font-size: 13px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+                </VBox>
+
+                <Separator orientation="VERTICAL"/>
+
+                <!-- Transbordos -->
+                <VBox spacing="3">
+                    <Label text="Transbordos" style="-fx-font-size: 11px; -fx-text-fill: #888;"/>
+                    <Label fx:id="lblTransbordo"
+                           text="—"
+                           style="-fx-font-size: 13px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+                </VBox>
+
+                <Separator orientation="VERTICAL"/>
+
+                <!-- Conexo -->
+                <VBox spacing="3">
+                    <Label text="Red conexa" style="-fx-font-size: 11px; -fx-text-fill: #888;"/>
+                    <Label fx:id="lblConexo"
+                           text="—"
+                           style="-fx-font-size: 13px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+                </VBox>
+
+            </children>
+        </HBox>
 
     </children>
 </AnchorPane>
