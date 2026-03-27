@@ -9,7 +9,7 @@ import java.util.*;
 
 public class Floyd_Warshall {
 
-    /**
+    /*
      * Ejecuta Floyd-Warshall sobre el grafo completo.
      *
      * @param grafo    El grafo de transporte
@@ -71,7 +71,7 @@ public class Floyd_Warshall {
         return new ResultadoFloyd(dist, pred, paradas);
     }
 
-    /**
+    /*
      * Atajo: devuelve directamente el camino más corto entre dos paradas.
      */
     public static List<Parada> caminoMasCorto(GrafoTransporte grafo,

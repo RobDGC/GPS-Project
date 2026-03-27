@@ -18,7 +18,7 @@ public class ResultadoFloyd {
         this.paradas = paradas;
     }
 
-    /**
+    /*
      * Devuelve el costo mínimo entre origen y destino,
      * o Double.MAX_VALUE si no existe camino.
      */
@@ -27,7 +27,7 @@ public class ResultadoFloyd {
                 .getOrDefault(destino, Double.MAX_VALUE);
     }
 
-    /**
+    /*
      * Reconstruye la lista de paradas del camino óptimo entre origen y destino.
      * Devuelve una lista vacía si no hay camino.
      */
@@ -60,7 +60,7 @@ public class ResultadoFloyd {
         return Collections.unmodifiableList(paradas);
     }
 
-    /** Toda la matriz de distancias (solo lectura). */
+    /* Toda la matriz de distancias (solo lectura). */
     public Map<Parada, Map<Parada, Double>> getTodasDistancias() {
         return Collections.unmodifiableMap(dist);
     }
