@@ -7,20 +7,27 @@ import com.brunomnsilva.smartgraph.graphview.SmartRandomPlacementStrategy;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
+import org.gps.gpsproject.algoritmos.Conexo;
 import org.gps.gpsproject.algoritmos.Dijkstra;
+import org.gps.gpsproject.algoritmos.ResultadoDijkstra;
 import org.gps.gpsproject.grafo.GrafoTransporte;
+import org.gps.gpsproject.modelo.Criterio;
 import org.gps.gpsproject.modelo.FiltroActual;
 import org.gps.gpsproject.modelo.Parada;
 import org.gps.gpsproject.modelo.Ruta;
-import org.gps.gpsproject.modelo.Criterio;
+
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.util.Duration;
 
 public class MapaControlador {
 
@@ -28,7 +35,6 @@ public class MapaControlador {
     @FXML private ComboBox<Parada> cbOrigen;
     @FXML private ComboBox<Parada> cbDestino;
     @FXML private ComboBox<String> cbFiltro;
-    // Agregar estos @FXML en MapaControlador
     @FXML private Label lblRuta;
     @FXML private Label lblTiempo;
     @FXML private Label lblDistancia;
@@ -39,9 +45,9 @@ public class MapaControlador {
     private Map<Parada, double[]> posicionesGuardadas = new HashMap<>();
     private SmartGraphPanel<Parada, Ruta> graphViewActual;
     private Digraph<Parada, Ruta> smartGraphActual;
-    private boolean esConexo = true;
 
     private GrafoTransporte grafo = GrafoTransporte.getInstance();
+    private boolean esConexo = Conexo.esConexo(grafo);
 
     @FXML
     public void initialize() {
@@ -59,6 +65,7 @@ public class MapaControlador {
         });
 
         construirGrafo();
+        lblConexo.setText(esConexo ? "Es conexo" : "No es conexo");
     }
 
     private void construirGrafo() {
@@ -85,12 +92,9 @@ public class MapaControlador {
             this.graphViewActual = graphView;
             this.smartGraphActual = smartGraph;
 
-            // Doble runLater: primero espera la escena, luego espera el layout
-            Platform.runLater(() -> {
-                Platform.runLater(() -> {
-                    Platform.runLater(() -> inicializarGraphView(graphView));
-                });
-            });
+            Platform.runLater(() -> Platform.runLater(() ->
+                    Platform.runLater(() -> inicializarGraphView(graphView))
+            ));
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -111,6 +115,14 @@ public class MapaControlador {
         }
 
         graphView.setOnMouseReleased(e -> guardarPosiciones(graphViewActual));
+
+        // Esperar 300ms para que SmartGraph termine de aplicar sus estilos CSS
+        Timeline delay = new Timeline(new KeyFrame(Duration.millis(300), event -> {
+            if (!esConexo) {
+                colorearTodosLosNodosNoAlcanzables();
+            }
+        }));
+        delay.play();
     }
 
     private void guardarPosiciones(SmartGraphPanel<Parada, Ruta> graphView) {
@@ -126,11 +138,23 @@ public class MapaControlador {
 
     @FXML
     private void buscarRuta() {
-        Parada origen = cbOrigen.getValue();
+        Parada origen  = cbOrigen.getValue();
         Parada destino = cbDestino.getValue();
-        String filtro = cbFiltro.getValue();
+        String filtro  = cbFiltro.getValue();
 
         if (origen == null || destino == null || filtro == null) return;
+
+        // Validación: grafo no conexo
+        if (!esConexo) {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Red no conexa");
+            alert.setHeaderText("No se puede buscar rutas");
+            alert.setContentText("La red de transporte no es completamente conexa. " +
+                    "Algunos nodos están desconectados (marcados en rojo). " +
+                    "Agrega rutas para conectar todos los nodos antes de buscar.");
+            alert.showAndWait();
+            return;
+        }
 
         FiltroActual.setFiltro(filtro);
         construirGrafo();
@@ -146,12 +170,15 @@ public class MapaControlador {
         List<Parada> camino = Dijkstra.caminoMasCorto(grafo, origen, destino, criterio);
 
         if (camino.isEmpty()) {
-            System.out.println("No hay camino entre " + origen + " y " + destino);
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Sin ruta");
+            alert.setHeaderText(null);
+            alert.setContentText("No existe un camino entre " + origen + " y " + destino + ".");
+            alert.showAndWait();
             return;
         }
 
-        javafx.application.Platform.runLater(() -> resaltarCamino(camino));
-        // Calcular totales recorriendo el camino
+        // Calcular totales
         double totalTiempo = 0, totalDistancia = 0, totalCosto = 0;
         int totalTransbordo = 0;
 
@@ -173,12 +200,77 @@ public class MapaControlador {
                 .map(Parada::getNombre)
                 .collect(java.util.stream.Collectors.joining(" → "));
 
-
         lblRuta.setText(rutaTexto);
         lblTiempo.setText(totalTiempo + " min");
         lblDistancia.setText(totalDistancia + " km");
         lblCosto.setText("$" + totalCosto);
         lblTransbordo.setText(String.valueOf(totalTransbordo));
+
+        // Resaltar camino y marcar nodos no alcanzables en rojo
+        Platform.runLater(() -> {
+            resaltarCamino(camino);
+            colorearNodosNoAlcanzables(origen, criterio);
+        });
+    }
+
+    /**
+     * Corre Dijkstra desde el origen y pinta en rojo los nodos
+     * que no tienen camino desde ese origen (distancia == MAX_VALUE).
+     */
+    private void colorearNodosNoAlcanzables(Parada origen, Criterio criterio) {
+        if (graphViewActual == null || smartGraphActual == null) return;
+
+        ResultadoDijkstra resultado = Dijkstra.dijkstra(grafo, origen, criterio);
+
+        smartGraphActual.vertices().forEach(v -> {
+            Parada p = v.element();
+            double dist = resultado.getDistancia(p);
+
+            if (dist == Double.MAX_VALUE) {
+                graphViewActual.getStylableVertex(v)
+                        .setStyleInline("-fx-fill: #e74c3c; -fx-stroke: #c0392b;");
+            }
+        });
+    }
+
+    /**
+     * Recorre todos los nodos del grafo y pinta en rojo los que
+     * están aislados (no pueden alcanzar ni ser alcanzados por otros nodos).
+     */
+    private void colorearTodosLosNodosNoAlcanzables() {
+        if (graphViewActual == null || smartGraphActual == null) return;
+
+        Criterio criterio = Criterio.TIEMPO;
+
+        // Construir mapa de entrantes: cuántos nodos tienen ruta hacia cada parada
+        Map<Parada, Long> entrantesMap = new HashMap<>();
+        for (Parada origen : grafo.getGrafo().keySet()) {
+            ResultadoDijkstra resultado = Dijkstra.dijkstra(grafo, origen, criterio);
+            for (Parada destino : grafo.getGrafo().keySet()) {
+                if (!origen.equals(destino) && resultado.getDistancia(destino) < Double.MAX_VALUE) {
+                    entrantesMap.merge(destino, 1L, Long::sum);
+                }
+            }
+        }
+
+        smartGraphActual.vertices().forEach(v -> {
+            Parada p = v.element();
+
+            // Salientes: cuántos nodos puede alcanzar este nodo
+            ResultadoDijkstra resultado = Dijkstra.dijkstra(grafo, p, criterio);
+            long salientes = resultado.getTodasDistancias().values().stream()
+                    .filter(d -> d < Double.MAX_VALUE)
+                    .count() - 1; // restar él mismo
+
+            // Entrantes: cuántos nodos tienen ruta hacia este nodo
+            long entrantes = entrantesMap.getOrDefault(p, 0L);
+
+            // Rojo si no tiene al menos una entrada Y una salida
+            if (entrantes == 0 || salientes == 0) {
+                graphViewActual.getStylableVertex(v)
+                        .setStyleInline("-fx-fill: #e74c3c; -fx-stroke: #c0392b;");
+            }
+        });
     }
 
     private void resaltarCamino(List<Parada> camino) {
@@ -221,6 +313,8 @@ public class MapaControlador {
         List<Parada> paradas = new ArrayList<>(grafo.getGrafo().keySet());
         cbOrigen.setItems(FXCollections.observableArrayList(paradas));
         cbDestino.setItems(FXCollections.observableArrayList(paradas));
+        esConexo = Conexo.esConexo(grafo);
+        lblConexo.setText(esConexo ? "Es conexo" : "No es conexo");
         construirGrafo();
     }
 
