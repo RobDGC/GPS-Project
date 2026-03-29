@@ -44,12 +44,18 @@ public class ParadasControlador {
             return;
         }
 
-        grafo.deleteParada(seleccionada);
+        Alert confirmacion = new Alert(Alert.AlertType.CONFIRMATION);
+        confirmacion.setTitle("Eliminar Parada");
+        confirmacion.setHeaderText("¿Estás seguro?");
+        confirmacion.setContentText("Se eliminará la parada \"" + seleccionada.getNombre() + "\" y todas sus rutas asociadas.");
 
-        // En vez de remove(), recargar toda la lista
-        listaParadas.setAll(new ArrayList<>(grafo.getGrafo().keySet()));
-
-        if (rutasControlador != null) rutasControlador.cargarDatos();
+        confirmacion.showAndWait().ifPresent(respuesta -> {
+            if (respuesta == ButtonType.OK) {
+                grafo.deleteParada(seleccionada);
+                listaParadas.setAll(new ArrayList<>(grafo.getGrafo().keySet()));
+                if (rutasControlador != null) rutasControlador.cargarDatos();
+            }
+        });
     }
 
     private void agregarParada() {

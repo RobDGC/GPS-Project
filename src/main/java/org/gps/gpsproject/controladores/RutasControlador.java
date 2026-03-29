@@ -61,13 +61,21 @@ public class RutasControlador {
             return;
         }
 
-        Parada origen  = buscarParada(seleccionada.getOrigen());
-        Parada destino = buscarParada(seleccionada.getDestino());
+        Alert confirmacion = new Alert(Alert.AlertType.CONFIRMATION);
+        confirmacion.setTitle("Eliminar Ruta");
+        confirmacion.setHeaderText("¿Estás seguro?");
+        confirmacion.setContentText("Se eliminará la ruta de \"" + seleccionada.getOrigen() + "\" → \"" + seleccionada.getDestino() + "\".");
 
-        if (origen != null && destino != null) {
-            grafo.deleteRuta(origen, destino);
-            cargarDatos();
-        }
+        confirmacion.showAndWait().ifPresent(respuesta -> {
+            if (respuesta == ButtonType.OK) {
+                Parada origen  = buscarParada(seleccionada.getOrigen());
+                Parada destino = buscarParada(seleccionada.getDestino());
+                if (origen != null && destino != null) {
+                    grafo.deleteRuta(origen, destino);
+                    cargarDatos();
+                }
+            }
+        });
     }
 
     public void cargarDatos() {

@@ -1,16 +1,23 @@
 package org.gps.gpsproject.controladores;
 
 import com.brunomnsilva.smartgraph.graph.Digraph;
+import com.brunomnsilva.smartgraph.graph.Vertex;
 import com.brunomnsilva.smartgraph.graphview.SmartGraphPanel;
 import com.brunomnsilva.smartgraph.graphview.SmartGraphProperties;
 import com.brunomnsilva.smartgraph.graphview.SmartRandomPlacementStrategy;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Pane;
+import javafx.util.Duration;
 import org.gps.gpsproject.algoritmos.Conexo;
 import org.gps.gpsproject.algoritmos.Dijkstra;
 import org.gps.gpsproject.algoritmos.ResultadoDijkstra;
@@ -21,13 +28,7 @@ import org.gps.gpsproject.modelo.Parada;
 import org.gps.gpsproject.modelo.Ruta;
 
 import java.net.URI;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
-import javafx.util.Duration;
+import java.util.*;
 
 public class MapaControlador {
 
@@ -41,16 +42,24 @@ public class MapaControlador {
     @FXML private Label lblCosto;
     @FXML private Label lblTransbordo;
     @FXML private Label lblConexo;
+    @FXML private Button btnReload;
+    @FXML private CheckBox chkArrastre;
+    @FXML private Pane overlayArrastre;
 
     private Map<Parada, double[]> posicionesGuardadas = new HashMap<>();
     private SmartGraphPanel<Parada, Ruta> graphViewActual;
     private Digraph<Parada, Ruta> smartGraphActual;
+    private boolean layoutAplicado = false;
+    private boolean arrastreHabilitado = true;
 
     private GrafoTransporte grafo = GrafoTransporte.getInstance();
     private boolean esConexo = Conexo.esConexo(grafo);
 
     @FXML
     public void initialize() {
+        posicionesGuardadas.clear();
+        layoutAplicado = false;
+
         List<Parada> paradas = new ArrayList<>(grafo.getGrafo().keySet());
         cbOrigen.setItems(FXCollections.observableArrayList(paradas));
         cbDestino.setItems(FXCollections.observableArrayList(paradas));
@@ -68,9 +77,43 @@ public class MapaControlador {
         lblConexo.setText(esConexo ? "Es conexo" : "No es conexo");
     }
 
+    @FXML
+    private void redistribuirLayout() {
+        posicionesGuardadas.clear();  // limpiar ANTES de construir
+        layoutAplicado = false;
+        if (graphViewActual != null && smartGraphActual != null) {
+            guardarPosicionesVacias(); // resetear posiciones en el mapa visual
+        }
+        construirGrafo();
+    }
+
+    private void guardarPosicionesVacias() {
+        posicionesGuardadas.clear();
+    }
+
+    @FXML
+    private void toggleArrastre() {
+        arrastreHabilitado = chkArrastre.isSelected();
+        btnReload.setDisable(!arrastreHabilitado);
+
+        // Si arrastre deshabilitado, el overlay captura todos los eventos del mouse
+        overlayArrastre.setVisible(!arrastreHabilitado);
+        overlayArrastre.setMouseTransparent(arrastreHabilitado);
+    }
+
+    private void aplicarEstadoArrastre() {
+        if (graphViewActual == null) return;
+
+        if (arrastreHabilitado) {
+            graphViewActual.setOnMouseReleased(e -> guardarPosiciones(graphViewActual));
+        } else {
+            graphViewActual.setOnMouseReleased(null);
+        }
+    }
+
     private void construirGrafo() {
         try {
-            if (graphViewActual != null) guardarPosiciones(graphViewActual);
+            if (graphViewActual != null && layoutAplicado) guardarPosiciones(graphViewActual);
 
             Digraph<Parada, Ruta> smartGraph = grafo.toSmartGraph();
 
@@ -112,17 +155,123 @@ public class MapaControlador {
                     graphView.setVertexPosition(v, pos[0], pos[1]);
                 }
             });
+        } else if (!layoutAplicado) {
+            layoutAplicado = true;
+            Platform.runLater(() -> aplicarLayoutFuerzaDirigida(graphView));
         }
 
-        graphView.setOnMouseReleased(e -> guardarPosiciones(graphViewActual));
+        // Aplicar estado de arrastre segun el checkbox
+        aplicarEstadoArrastre();
 
-        // Esperar 300ms para que SmartGraph termine de aplicar sus estilos CSS
-        Timeline delay = new Timeline(new KeyFrame(Duration.millis(300), event -> {
-            if (!esConexo) {
-                colorearTodosLosNodosNoAlcanzables();
-            }
+        Timeline delayColor = new Timeline(new KeyFrame(Duration.millis(400), e -> {
+            if (!esConexo) colorearTodosLosNodosNoAlcanzables();
         }));
-        delay.play();
+        delayColor.play();
+    }
+
+    private void aplicarLayoutFuerzaDirigida(SmartGraphPanel<Parada, Ruta> graphView) {
+        double ancho  = panelGrafo.getWidth()  > 0 ? panelGrafo.getWidth()  : 800;
+        double alto   = panelGrafo.getHeight() > 0 ? panelGrafo.getHeight() : 600;
+        double margen = 80;
+
+        List<Vertex<Parada>> vertices = new ArrayList<>(smartGraphActual.vertices());
+        int n = vertices.size();
+        if (n == 0) return;
+
+        Map<Vertex<Parada>, double[]> pos = new HashMap<>();
+        double cx    = ancho / 2;
+        double cy    = alto  / 2;
+        double radio = Math.min(ancho, alto) * 0.35;
+
+        for (int i = 0; i < n; i++) {
+            double angulo = 2 * Math.PI * i / n;
+            pos.put(vertices.get(i), new double[]{
+                    cx + radio * Math.cos(angulo),
+                    cy + radio * Math.sin(angulo)
+            });
+        }
+
+        Map<Vertex<Parada>, Set<Vertex<Parada>>> adyacencia = new HashMap<>();
+        for (Vertex<Parada> v : vertices) adyacencia.put(v, new HashSet<>());
+        smartGraphActual.edges().forEach(e -> {
+            Vertex<Parada>[] extremos = e.vertices();
+            adyacencia.get(extremos[0]).add(extremos[1]);
+            adyacencia.get(extremos[1]).add(extremos[0]);
+        });
+
+        int    iteraciones  = 300;
+        double k            = Math.sqrt((ancho * alto) / n);
+        double temperatura  = ancho / 2;
+        double enfriamiento = temperatura / iteraciones;
+
+        Map<Vertex<Parada>, double[]> desplazamiento = new HashMap<>();
+
+        for (int iter = 0; iter < iteraciones; iter++) {
+
+            for (Vertex<Parada> v : vertices) desplazamiento.put(v, new double[]{0, 0});
+
+            for (int i = 0; i < n; i++) {
+                for (int j = i + 1; j < n; j++) {
+                    Vertex<Parada> vi = vertices.get(i);
+                    Vertex<Parada> vj = vertices.get(j);
+
+                    double dx   = pos.get(vi)[0] - pos.get(vj)[0];
+                    double dy   = pos.get(vi)[1] - pos.get(vj)[1];
+                    double dist = Math.max(Math.sqrt(dx * dx + dy * dy), 0.01);
+
+                    double fuerza = (k * k) / dist;
+                    double fx = (dx / dist) * fuerza;
+                    double fy = (dy / dist) * fuerza;
+
+                    desplazamiento.get(vi)[0] += fx;
+                    desplazamiento.get(vi)[1] += fy;
+                    desplazamiento.get(vj)[0] -= fx;
+                    desplazamiento.get(vj)[1] -= fy;
+                }
+            }
+
+            smartGraphActual.edges().forEach(e -> {
+                Vertex<Parada>[] extremos = e.vertices();
+                Vertex<Parada> vi = extremos[0];
+                Vertex<Parada> vj = extremos[1];
+
+                double dx   = pos.get(vi)[0] - pos.get(vj)[0];
+                double dy   = pos.get(vi)[1] - pos.get(vj)[1];
+                double dist = Math.max(Math.sqrt(dx * dx + dy * dy), 0.01);
+
+                double fuerza = (dist * dist) / k;
+                double fx = (dx / dist) * fuerza;
+                double fy = (dy / dist) * fuerza;
+
+                desplazamiento.get(vi)[0] -= fx;
+                desplazamiento.get(vi)[1] -= fy;
+                desplazamiento.get(vj)[0] += fx;
+                desplazamiento.get(vj)[1] += fy;
+            });
+
+            for (Vertex<Parada> v : vertices) {
+                double dx   = desplazamiento.get(v)[0];
+                double dy   = desplazamiento.get(v)[1];
+                double dist = Math.max(Math.sqrt(dx * dx + dy * dy), 0.01);
+
+                double nx = pos.get(v)[0] + (dx / dist) * Math.min(dist, temperatura);
+                double ny = pos.get(v)[1] + (dy / dist) * Math.min(dist, temperatura);
+
+                nx = Math.max(margen, Math.min(ancho - margen, nx));
+                ny = Math.max(margen, Math.min(alto  - margen, ny));
+
+                pos.get(v)[0] = nx;
+                pos.get(v)[1] = ny;
+            }
+
+            temperatura -= enfriamiento;
+        }
+
+        for (Vertex<Parada> v : vertices) {
+            graphView.setVertexPosition(v, pos.get(v)[0], pos.get(v)[1]);
+        }
+
+        guardarPosiciones(graphView);
     }
 
     private void guardarPosiciones(SmartGraphPanel<Parada, Ruta> graphView) {
@@ -144,7 +293,6 @@ public class MapaControlador {
 
         if (origen == null || destino == null || filtro == null) return;
 
-        // Validación: grafo no conexo
         if (!esConexo) {
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setTitle("Red no conexa");
@@ -178,7 +326,6 @@ public class MapaControlador {
             return;
         }
 
-        // Calcular totales
         double totalTiempo = 0, totalDistancia = 0, totalCosto = 0;
         int totalTransbordo = 0;
 
@@ -197,7 +344,7 @@ public class MapaControlador {
         }
 
         String rutaTexto = camino.stream()
-                .map(Parada::getNombre)
+                .map(Parada::getId)
                 .collect(java.util.stream.Collectors.joining(" → "));
 
         lblRuta.setText(rutaTexto);
@@ -206,17 +353,12 @@ public class MapaControlador {
         lblCosto.setText("$" + totalCosto);
         lblTransbordo.setText(String.valueOf(totalTransbordo));
 
-        // Resaltar camino y marcar nodos no alcanzables en rojo
         Platform.runLater(() -> {
             resaltarCamino(camino);
             colorearNodosNoAlcanzables(origen, criterio);
         });
     }
 
-    /**
-     * Corre Dijkstra desde el origen y pinta en rojo los nodos
-     * que no tienen camino desde ese origen (distancia == MAX_VALUE).
-     */
     private void colorearNodosNoAlcanzables(Parada origen, Criterio criterio) {
         if (graphViewActual == null || smartGraphActual == null) return;
 
@@ -225,7 +367,6 @@ public class MapaControlador {
         smartGraphActual.vertices().forEach(v -> {
             Parada p = v.element();
             double dist = resultado.getDistancia(p);
-
             if (dist == Double.MAX_VALUE) {
                 graphViewActual.getStylableVertex(v)
                         .setStyleInline("-fx-fill: #e74c3c; -fx-stroke: #c0392b;");
@@ -233,16 +374,11 @@ public class MapaControlador {
         });
     }
 
-    /**
-     * Recorre todos los nodos del grafo y pinta en rojo los que
-     * están aislados (no pueden alcanzar ni ser alcanzados por otros nodos).
-     */
     private void colorearTodosLosNodosNoAlcanzables() {
         if (graphViewActual == null || smartGraphActual == null) return;
 
         Criterio criterio = Criterio.TIEMPO;
 
-        // Construir mapa de entrantes: cuántos nodos tienen ruta hacia cada parada
         Map<Parada, Long> entrantesMap = new HashMap<>();
         for (Parada origen : grafo.getGrafo().keySet()) {
             ResultadoDijkstra resultado = Dijkstra.dijkstra(grafo, origen, criterio);
@@ -256,16 +392,13 @@ public class MapaControlador {
         smartGraphActual.vertices().forEach(v -> {
             Parada p = v.element();
 
-            // Salientes: cuántos nodos puede alcanzar este nodo
             ResultadoDijkstra resultado = Dijkstra.dijkstra(grafo, p, criterio);
             long salientes = resultado.getTodasDistancias().values().stream()
                     .filter(d -> d < Double.MAX_VALUE)
-                    .count() - 1; // restar él mismo
+                    .count() - 1;
 
-            // Entrantes: cuántos nodos tienen ruta hacia este nodo
             long entrantes = entrantesMap.getOrDefault(p, 0L);
 
-            // Rojo si no tiene al menos una entrada Y una salida
             if (entrantes == 0 || salientes == 0) {
                 graphViewActual.getStylableVertex(v)
                         .setStyleInline("-fx-fill: #e74c3c; -fx-stroke: #c0392b;");

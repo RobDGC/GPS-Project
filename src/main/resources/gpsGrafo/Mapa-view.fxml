@@ -38,9 +38,23 @@
                         prefWidth="150"
                         style="-fx-background-color: #2c3e50; -fx-text-fill: white; -fx-font-size: 14px; -fx-cursor: hand;"/>
 
+                <!-- Separador visual -->
+                <Separator orientation="VERTICAL" prefHeight="30"/>
+
+                <Button fx:id="btnReload"
+                        text="🔀 Redistribuir"
+                        onAction="#redistribuirLayout"
+                        prefWidth="150"
+                        style="-fx-background-color: #8e44ad; -fx-text-fill: white; -fx-font-size: 14px; -fx-cursor: hand;"/>
+
+                <CheckBox fx:id="chkArrastre"
+                          text="Arrastre de nodos"
+                          selected="true"
+                          onAction="#toggleArrastre"
+                          style="-fx-font-size: 13px;"/>
+
             </children>
         </HBox>
-
 
         <AnchorPane fx:id="panelGrafo"
                     style="-fx-background-color: #F0F0F5;"
@@ -48,6 +62,15 @@
                     AnchorPane.leftAnchor="0"
                     AnchorPane.rightAnchor="0"
                     AnchorPane.bottomAnchor="110"/>
+
+        <Pane fx:id="overlayArrastre"
+              style="-fx-background-color: transparent;"
+              AnchorPane.topAnchor="65"
+              AnchorPane.leftAnchor="0"
+              AnchorPane.rightAnchor="0"
+              AnchorPane.bottomAnchor="110"
+              visible="false"
+              mouseTransparent="false"/>
 
         <HBox fx:id="panelResultados"
               spacing="30"
@@ -58,61 +81,49 @@
               style="-fx-background-color: white; -fx-border-color: #dcdcdc; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 12 20 12 20;">
             <children>
 
-                <!-- Ruta -->
                 <VBox spacing="3">
                     <Label text="Ruta" style="-fx-font-size: 11px; -fx-text-fill: #888;"/>
-                    <Label fx:id="lblRuta"
-                           text="—"
+                    <Label fx:id="lblRuta" text="—"
                            style="-fx-font-size: 13px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
                 </VBox>
 
                 <Separator orientation="VERTICAL"/>
 
-                <!-- Tiempo -->
                 <VBox spacing="3">
                     <Label text="Tiempo" style="-fx-font-size: 11px; -fx-text-fill: #888;"/>
-                    <Label fx:id="lblTiempo"
-                           text="—"
+                    <Label fx:id="lblTiempo" text="—"
                            style="-fx-font-size: 13px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
                 </VBox>
 
                 <Separator orientation="VERTICAL"/>
 
-                <!-- Distancia -->
                 <VBox spacing="3">
                     <Label text="Distancia" style="-fx-font-size: 11px; -fx-text-fill: #888;"/>
-                    <Label fx:id="lblDistancia"
-                           text="—"
+                    <Label fx:id="lblDistancia" text="—"
                            style="-fx-font-size: 13px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
                 </VBox>
 
                 <Separator orientation="VERTICAL"/>
 
-                <!-- Costo -->
                 <VBox spacing="3">
                     <Label text="Costo" style="-fx-font-size: 11px; -fx-text-fill: #888;"/>
-                    <Label fx:id="lblCosto"
-                           text="—"
+                    <Label fx:id="lblCosto" text="—"
                            style="-fx-font-size: 13px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
                 </VBox>
 
                 <Separator orientation="VERTICAL"/>
 
-                <!-- Transbordos -->
                 <VBox spacing="3">
                     <Label text="Transbordos" style="-fx-font-size: 11px; -fx-text-fill: #888;"/>
-                    <Label fx:id="lblTransbordo"
-                           text="—"
+                    <Label fx:id="lblTransbordo" text="—"
                            style="-fx-font-size: 13px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
                 </VBox>
 
                 <Separator orientation="VERTICAL"/>
 
-                <!-- Conexo -->
                 <VBox spacing="3">
                     <Label text="Red conexa" style="-fx-font-size: 11px; -fx-text-fill: #888;"/>
-                    <Label fx:id="lblConexo"
-                           text="—"
+                    <Label fx:id="lblConexo" text="—"
                            style="-fx-font-size: 13px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
                 </VBox>
 
