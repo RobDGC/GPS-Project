@@ -15,10 +15,10 @@
                     AnchorPane.topAnchor="117.0">
             <children>
                 <Pane fx:id="subMenuPrincipal"
-                      AnchorPane.topAnchor="60"
-                      AnchorPane.leftAnchor="60"
-                      AnchorPane.rightAnchor="60"
-                      AnchorPane.bottomAnchor="60"/>
+                      AnchorPane.topAnchor="0"
+                      AnchorPane.leftAnchor="0"
+                      AnchorPane.rightAnchor="0"
+                      AnchorPane.bottomAnchor="0"/>
             </children>
         </AnchorPane>
 

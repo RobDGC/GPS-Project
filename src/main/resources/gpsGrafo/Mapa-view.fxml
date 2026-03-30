@@ -10,45 +10,43 @@
             style="-fx-background-color: #F0F0F5;">
     <children>
 
-        <HBox spacing="15"
-              AnchorPane.topAnchor="15"
+        <HBox spacing="10"
+              AnchorPane.topAnchor="12"
               AnchorPane.leftAnchor="15"
               AnchorPane.rightAnchor="15"
               alignment="CENTER_LEFT">
             <children>
 
-                <Label text="Origen:">
-                    <font><Font name="Arial Bold" size="14.0"/></font>
-                </Label>
-                <ComboBox fx:id="cbOrigen" prefWidth="160"/>
+                <ComboBox fx:id="cbOrigen"
+                          promptText="Origen"
+                          prefWidth="170"/>
 
-                <Label text="Destino:">
-                    <font><Font name="Arial Bold" size="14.0"/></font>
-                </Label>
-                <ComboBox fx:id="cbDestino" prefWidth="160"/>
+                <ComboBox fx:id="cbDestino"
+                          promptText="Destino"
+                          prefWidth="170"/>
 
-                <Label text="Filtro:">
-                    <font><Font name="Arial Bold" size="14.0"/></font>
-                </Label>
-                <ComboBox fx:id="cbFiltro" prefWidth="140"/>
+                <ComboBox fx:id="cbFiltro"
+                          prefWidth="130"/>
+
+                <ComboBox fx:id="cbAlgoritmo"
+                          prefWidth="150"/>
 
                 <Button fx:id="btnBuscar"
                         text="🔍 Buscar Ruta"
                         onAction="#buscarRuta"
-                        prefWidth="150"
-                        style="-fx-background-color: #2c3e50; -fx-text-fill: white; -fx-font-size: 14px; -fx-cursor: hand;"/>
+                        prefWidth="140"
+                        style="-fx-background-color: #2c3e50; -fx-text-fill: white; -fx-font-size: 13px; -fx-cursor: hand;"/>
 
-                <!-- Separador visual -->
                 <Separator orientation="VERTICAL" prefHeight="30"/>
 
                 <Button fx:id="btnReload"
                         text="🔀 Redistribuir"
                         onAction="#redistribuirLayout"
-                        prefWidth="150"
-                        style="-fx-background-color: #8e44ad; -fx-text-fill: white; -fx-font-size: 14px; -fx-cursor: hand;"/>
+                        prefWidth="140"
+                        style="-fx-background-color: #8e44ad; -fx-text-fill: white; -fx-font-size: 13px; -fx-cursor: hand;"/>
 
                 <CheckBox fx:id="chkArrastre"
-                          text="Arrastre de nodos"
+                          text="Arrastre"
                           selected="true"
                           onAction="#toggleArrastre"
                           style="-fx-font-size: 13px;"/>
@@ -58,73 +56,81 @@
 
         <AnchorPane fx:id="panelGrafo"
                     style="-fx-background-color: #F0F0F5;"
-                    AnchorPane.topAnchor="65"
+                    AnchorPane.topAnchor="55"
                     AnchorPane.leftAnchor="0"
                     AnchorPane.rightAnchor="0"
-                    AnchorPane.bottomAnchor="110"/>
+                    AnchorPane.bottomAnchor="90"/>
 
         <Pane fx:id="overlayArrastre"
               style="-fx-background-color: transparent;"
-              AnchorPane.topAnchor="65"
+              AnchorPane.topAnchor="55"
               AnchorPane.leftAnchor="0"
               AnchorPane.rightAnchor="0"
-              AnchorPane.bottomAnchor="110"
+              AnchorPane.bottomAnchor="90"
               visible="false"
               mouseTransparent="false"/>
 
         <HBox fx:id="panelResultados"
-              spacing="30"
+              spacing="20"
               alignment="CENTER_LEFT"
-              AnchorPane.bottomAnchor="10"
+              AnchorPane.bottomAnchor="8"
               AnchorPane.leftAnchor="15"
               AnchorPane.rightAnchor="15"
-              style="-fx-background-color: white; -fx-border-color: #dcdcdc; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 12 20 12 20;">
+              style="-fx-background-color: white; -fx-border-color: #dcdcdc; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 10 15 10 15;">
             <children>
 
-                <VBox spacing="3">
-                    <Label text="Ruta" style="-fx-font-size: 11px; -fx-text-fill: #888;"/>
+                <VBox spacing="2">
+                    <Label text="Ruta" style="-fx-font-size: 10px; -fx-text-fill: #888;"/>
                     <Label fx:id="lblRuta" text="—"
-                           style="-fx-font-size: 13px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+                           style="-fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
                 </VBox>
 
                 <Separator orientation="VERTICAL"/>
 
-                <VBox spacing="3">
-                    <Label text="Tiempo" style="-fx-font-size: 11px; -fx-text-fill: #888;"/>
+                <VBox spacing="2">
+                    <Label text="Tiempo" style="-fx-font-size: 10px; -fx-text-fill: #888;"/>
                     <Label fx:id="lblTiempo" text="—"
-                           style="-fx-font-size: 13px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+                           style="-fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
                 </VBox>
 
                 <Separator orientation="VERTICAL"/>
 
-                <VBox spacing="3">
-                    <Label text="Distancia" style="-fx-font-size: 11px; -fx-text-fill: #888;"/>
+                <VBox spacing="2">
+                    <Label text="Distancia" style="-fx-font-size: 10px; -fx-text-fill: #888;"/>
                     <Label fx:id="lblDistancia" text="—"
-                           style="-fx-font-size: 13px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+                           style="-fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
                 </VBox>
 
                 <Separator orientation="VERTICAL"/>
 
-                <VBox spacing="3">
-                    <Label text="Costo" style="-fx-font-size: 11px; -fx-text-fill: #888;"/>
+                <VBox spacing="2">
+                    <Label text="Costo" style="-fx-font-size: 10px; -fx-text-fill: #888;"/>
                     <Label fx:id="lblCosto" text="—"
-                           style="-fx-font-size: 13px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+                           style="-fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
                 </VBox>
 
                 <Separator orientation="VERTICAL"/>
 
-                <VBox spacing="3">
-                    <Label text="Transbordos" style="-fx-font-size: 11px; -fx-text-fill: #888;"/>
+                <VBox spacing="2">
+                    <Label text="Transbordos" style="-fx-font-size: 10px; -fx-text-fill: #888;"/>
                     <Label fx:id="lblTransbordo" text="—"
-                           style="-fx-font-size: 13px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+                           style="-fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
                 </VBox>
 
                 <Separator orientation="VERTICAL"/>
 
-                <VBox spacing="3">
-                    <Label text="Red conexa" style="-fx-font-size: 11px; -fx-text-fill: #888;"/>
+                <VBox spacing="2">
+                    <Label text="Algoritmo" style="-fx-font-size: 10px; -fx-text-fill: #888;"/>
+                    <Label fx:id="lblAlgoritmo" text="—"
+                           style="-fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+                </VBox>
+
+                <Separator orientation="VERTICAL"/>
+
+                <VBox spacing="2">
+                    <Label text="Red conexa" style="-fx-font-size: 10px; -fx-text-fill: #888;"/>
                     <Label fx:id="lblConexo" text="—"
-                           style="-fx-font-size: 13px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+                           style="-fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
                 </VBox>
 
             </children>

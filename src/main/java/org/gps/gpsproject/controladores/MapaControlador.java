@@ -26,6 +26,7 @@ import org.gps.gpsproject.modelo.Criterio;
 import org.gps.gpsproject.modelo.FiltroActual;
 import org.gps.gpsproject.modelo.Parada;
 import org.gps.gpsproject.modelo.Ruta;
+import org.gps.gpsproject.algoritmos.Floyd_Warshall;
 
 import java.net.URI;
 import java.util.*;
@@ -45,6 +46,11 @@ public class MapaControlador {
     @FXML private Button btnReload;
     @FXML private CheckBox chkArrastre;
     @FXML private Pane overlayArrastre;
+    @FXML private ComboBox<String> cbAlgoritmo;
+    @FXML private Label lblAlgoritmo;
+
+    private List<Parada> caminoPendiente = null;
+    private Criterio criterioPendiente = null;
 
     private Map<Parada, double[]> posicionesGuardadas = new HashMap<>();
     private SmartGraphPanel<Parada, Ruta> graphViewActual;
@@ -72,6 +78,9 @@ public class MapaControlador {
             FiltroActual.setFiltro(cbFiltro.getValue());
             construirGrafo();
         });
+
+        cbAlgoritmo.setItems(FXCollections.observableArrayList("Dijkstra", "Floyd-Warshall"));
+        cbAlgoritmo.setValue("Dijkstra");
 
         construirGrafo();
         lblConexo.setText(esConexo ? "Es conexo" : "No es conexo");
@@ -165,6 +174,14 @@ public class MapaControlador {
 
         Timeline delayColor = new Timeline(new KeyFrame(Duration.millis(400), e -> {
             if (!esConexo) colorearTodosLosNodosNoAlcanzables();
+
+            // Aplicar camino pendiente si hay uno
+            if (caminoPendiente != null) {
+                resaltarCamino(caminoPendiente);
+                colorearNodosNoAlcanzables(caminoPendiente.get(0), criterioPendiente);
+                caminoPendiente = null;
+                criterioPendiente = null;
+            }
         }));
         delayColor.play();
     }
@@ -290,8 +307,27 @@ public class MapaControlador {
         Parada origen  = cbOrigen.getValue();
         Parada destino = cbDestino.getValue();
         String filtro  = cbFiltro.getValue();
+        String algoritmo = cbAlgoritmo.getValue();
 
-        if (origen == null || destino == null || filtro == null) return;
+        // Validar que origen y destino estén seleccionados
+        if (origen == null && destino == null) {
+            new Alert(Alert.AlertType.WARNING, "Debes seleccionar un origen y un destino.").showAndWait();
+            return;
+        }
+        if (origen == null) {
+            new Alert(Alert.AlertType.WARNING, "Debes seleccionar un origen.").showAndWait();
+            return;
+        }
+        if (destino == null) {
+            new Alert(Alert.AlertType.WARNING, "Debes seleccionar un destino.").showAndWait();
+            return;
+        }
+        if (origen.equals(destino)) {
+            new Alert(Alert.AlertType.WARNING, "El origen y el destino no pueden ser iguales.").showAndWait();
+            return;
+        }
+
+        if (origen == null || destino == null || filtro == null || algoritmo == null) return;
 
         if (!esConexo) {
             Alert alert = new Alert(Alert.AlertType.WARNING);
@@ -315,7 +351,11 @@ public class MapaControlador {
             default           -> Criterio.TIEMPO;
         };
 
-        List<Parada> camino = Dijkstra.caminoMasCorto(grafo, origen, destino, criterio);
+        // Seleccionar algoritmo
+        List<Parada> camino = switch (algoritmo) {
+            case "Floyd-Warshall" -> Floyd_Warshall.caminoMasCorto(grafo, origen, destino, criterio);
+            default               -> Dijkstra.caminoMasCorto(grafo, origen, destino, criterio);
+        };
 
         if (camino.isEmpty()) {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -352,11 +392,17 @@ public class MapaControlador {
         lblDistancia.setText(totalDistancia + " km");
         lblCosto.setText("$" + totalCosto);
         lblTransbordo.setText(String.valueOf(totalTransbordo));
+        lblAlgoritmo.setText(algoritmo);
 
-        Platform.runLater(() -> {
-            resaltarCamino(camino);
-            colorearNodosNoAlcanzables(origen, criterio);
-        });
+        caminoPendiente = camino;
+        criterioPendiente = criterio;
+
+        lblRuta.setText(rutaTexto);
+        lblTiempo.setText(totalTiempo + " min");
+        lblDistancia.setText(totalDistancia + " km");
+        lblCosto.setText("$" + totalCosto);
+        lblTransbordo.setText(String.valueOf(totalTransbordo));
+        lblAlgoritmo.setText(algoritmo);
     }
 
     private void colorearNodosNoAlcanzables(Parada origen, Criterio criterio) {
