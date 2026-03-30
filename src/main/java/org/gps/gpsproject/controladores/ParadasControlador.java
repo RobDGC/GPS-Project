@@ -17,6 +17,8 @@ public class ParadasControlador {
     @FXML private TableColumn<Parada, String> colNombre;
     @FXML private Button btnAgregar;
     @FXML private Button btnEliminar;
+    @FXML private Button btnModificar;
+
 
     private ObservableList<Parada> listaParadas = FXCollections.observableArrayList();
     private GrafoTransporte grafo = GrafoTransporte.getInstance();
@@ -33,6 +35,7 @@ public class ParadasControlador {
         tableParadas.setItems(listaParadas);
         btnAgregar.setOnAction(e -> agregarParada());
         btnEliminar.setOnAction(e -> eliminarParada());
+        btnModificar.setOnAction(e -> modificarParada());
         cargarDatos();
     }
 
@@ -68,6 +71,30 @@ public class ParadasControlador {
             if (!nombre.isEmpty()) {
                 Parada nueva = grafo.addParada(nombre);
                 listaParadas.add(nueva);
+            } else {
+                new Alert(Alert.AlertType.ERROR, "El nombre no puede estar vacío.").showAndWait();
+            }
+        });
+    }
+
+    private void modificarParada() {
+        Parada seleccionada = tableParadas.getSelectionModel().getSelectedItem();
+
+        if (seleccionada == null) {
+            new Alert(Alert.AlertType.WARNING, "Selecciona una parada para modificar.").showAndWait();
+            return;
+        }
+
+        TextInputDialog dialog = new TextInputDialog(seleccionada.getNombre());
+        dialog.setTitle("Modificar Parada");
+        dialog.setHeaderText("Ingrese el nuevo nombre de la parada");
+
+        dialog.showAndWait().ifPresent(nombre -> {
+            nombre = nombre.trim();
+            if (!nombre.isEmpty()) {
+                seleccionada.setNombre(nombre);
+                tableParadas.refresh();
+                if (rutasControlador != null) rutasControlador.cargarDatos();
             } else {
                 new Alert(Alert.AlertType.ERROR, "El nombre no puede estar vacío.").showAndWait();
             }

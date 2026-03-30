@@ -7,33 +7,31 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import org.gps.gpsproject.grafo.GrafoTransporte;
 import org.gps.gpsproject.modelo.Parada;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
+import javafx.scene.layout.AnchorPane;
 
 public class RutasControlador {
 
-    @FXML
-    private TableView<RutaTabla> tableRutas;
+    @FXML private TableView<RutaTabla> tableRutas;
 
-    @FXML
-    private TableColumn<RutaTabla, String> colOrigen;
+    @FXML private TableColumn<RutaTabla, String> colOrigen;
 
-    @FXML
-    private TableColumn<RutaTabla, String> colDestino;
+    @FXML private TableColumn<RutaTabla, String> colDestino;
 
-    @FXML
-    private TableColumn<RutaTabla, Double> colTiempo;
+    @FXML private TableColumn<RutaTabla, Double> colTiempo;
 
-    @FXML
-    private TableColumn<RutaTabla, Double> colDistancia;
+    @FXML private TableColumn<RutaTabla, Double> colDistancia;
 
-    @FXML
-    private TableColumn<RutaTabla, Double> colCosto;
+    @FXML private TableColumn<RutaTabla, Double> colCosto;
 
-    @FXML
-    private TableColumn<RutaTabla, Integer> colTransbordo;
+    @FXML private TableColumn<RutaTabla, Integer> colTransbordo;
 
-    @FXML
-    private Button btnAgregarRuta;
+    @FXML private Button btnAgregarRuta;
     @FXML private Button btnEliminarRuta;
+    @FXML private Button btnModificarRuta;
+
 
     private ObservableList<RutaTabla> listaRutas = FXCollections.observableArrayList();
 
@@ -48,8 +46,9 @@ public class RutasControlador {
         colCosto.setCellValueFactory(new PropertyValueFactory<>("costo"));
         colTransbordo.setCellValueFactory(new PropertyValueFactory<>("transbordo"));
         tableRutas.setItems(listaRutas);
-        btnAgregarRuta.setOnAction(e -> agregarRuta());
-        btnEliminarRuta.setOnAction(e -> eliminarRuta()); // ← agregar
+        btnAgregarRuta.setOnAction(e -> abrirFormulario(null));
+        btnEliminarRuta.setOnAction(e -> eliminarRuta());
+        btnModificarRuta.setOnAction(e -> modificarRuta());
         cargarDatos();
     }
 
@@ -155,6 +154,52 @@ public class RutasControlador {
                 alert.showAndWait();
             }
         });
+    }
+
+    private void abrirFormulario(RutaTabla rutaExistente) {
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/gpsGrafo/RutaFormulario.fxml")
+            );
+            AnchorPane root = loader.load();
+            RutaFormularioControlador controlador = loader.getController();
+            controlador.setRutasControlador(this);
+
+            // Si viene una ruta existente, cargar sus datos para edición
+            if (rutaExistente != null) {
+                Parada origen  = buscarParada(rutaExistente.getOrigen());
+                Parada destino = buscarParada(rutaExistente.getDestino());
+                if (origen != null && destino != null) {
+                    controlador.cargarRuta(
+                            origen, destino,
+                            rutaExistente.getTiempo(),
+                            rutaExistente.getDistancia(),
+                            rutaExistente.getCosto(),
+                            rutaExistente.getTransbordo()
+                    );
+                }
+            }
+
+            Stage stage = new Stage();
+            stage.setTitle(rutaExistente == null ? "Nueva Ruta" : "Modificar Ruta");
+            stage.setScene(new Scene(root));
+            stage.setResizable(false);
+            stage.show();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void modificarRuta() {
+        RutaTabla seleccionada = tableRutas.getSelectionModel().getSelectedItem();
+
+        if (seleccionada == null) {
+            new Alert(Alert.AlertType.WARNING, "Selecciona una ruta para modificar.").showAndWait();
+            return;
+        }
+
+        abrirFormulario(seleccionada);
     }
 
     private Parada buscarParada(String id) {

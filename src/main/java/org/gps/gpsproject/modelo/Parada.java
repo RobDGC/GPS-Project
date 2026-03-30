@@ -17,6 +17,10 @@ public class Parada {
         return nombre;
     }
 
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
     @Override
     public boolean equals(Object aux){
         if(this == aux) return true;

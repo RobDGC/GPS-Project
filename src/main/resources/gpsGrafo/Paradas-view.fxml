@@ -15,7 +15,7 @@
         <HBox spacing="15">
             <Button fx:id="btnAgregar" prefWidth="200" text="Agregar Parada" />
             <Button fx:id="btnEliminar" prefWidth="200" text="Eliminar Parada" />
-            <Button prefWidth="200" text="Modificar Parada" />
+            <Button fx:id="btnModificar" prefWidth="200" text="Modificar Parada" />
         </HBox>
 
         <TableView fx:id="tableParadas" maxWidth="Infinity" VBox.vgrow="ALWAYS">
