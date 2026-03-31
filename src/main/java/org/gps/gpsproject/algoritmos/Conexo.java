@@ -1,4 +1,3 @@
-// src/main/java/org/gps/gpsproject/algoritmos/Conectividad.java
 package org.gps.gpsproject.algoritmos;
 
 import org.gps.gpsproject.grafo.GrafoTransporte;

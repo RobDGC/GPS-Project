@@ -7,14 +7,14 @@ import java.util.*;
 public class ResultadoFloyd {
 
     private final Map<Parada, Map<Parada, Double>> dist;
-    private final Map<Parada, Map<Parada, Parada>> pred;
+    private final Map<Parada, Map<Parada, Parada>> next; // next[i][j] = siguiente nodo desde i hacia j
     private final List<Parada>                      paradas;
 
     public ResultadoFloyd(Map<Parada, Map<Parada, Double>> dist,
-                          Map<Parada, Map<Parada, Parada>> pred,
+                          Map<Parada, Map<Parada, Parada>> next,
                           List<Parada> paradas) {
         this.dist    = dist;
-        this.pred    = pred;
+        this.next    = next;
         this.paradas = paradas;
     }
 
@@ -28,30 +28,27 @@ public class ResultadoFloyd {
     }
 
     /*
-     * Reconstruye la lista de paradas del camino óptimo entre origen y destino.
-     * Devuelve una lista vacía si no hay camino.
+     * Reconstruye el camino óptimo entre origen y destino de forma iterativa.
+     * Devuelve lista vacía si no hay camino.
      */
     public List<Parada> getCamino(Parada origen, Parada destino) {
         if (getDistancia(origen, destino) == Double.MAX_VALUE) {
             return Collections.emptyList();
         }
-        return reconstruir(origen, destino, new ArrayList<>());
-    }
 
-    private List<Parada> reconstruir(Parada origen, Parada destino, List<Parada> camino) {
-        if (origen.equals(destino)) {
-            camino.add(origen);
-            return camino;
+        List<Parada> camino = new ArrayList<>();
+        Parada actual = origen;
+
+        while (!actual.equals(destino)) {
+            camino.add(actual);
+            actual = next.getOrDefault(actual, Collections.emptyMap()).get(destino);
+
+            if (actual == null) {
+                // No hay camino válido
+                return Collections.emptyList();
+            }
         }
 
-        Parada predecesor = pred.getOrDefault(origen, Collections.emptyMap()).get(destino);
-
-        if (predecesor == null) {
-            return Collections.emptyList();
-        }
-
-        camino = reconstruir(origen, predecesor, camino);
-        if (camino.isEmpty()) return camino;
         camino.add(destino);
         return camino;
     }

@@ -12,38 +12,37 @@ public class Floyd_Warshall {
     /*
      * Ejecuta Floyd-Warshall sobre el grafo completo.
      *
-     * @param grafo    El grafo de transporte
-     * @param criterio Qué peso minimizar (TIEMPO, COSTO, DISTANCIA, TRANSBORDOS)
-     * @return ResultadoFloyd con las matrices de distancias y predecesores
+     * parametros: grafo    El grafo de transporte
+     *             criterio Qué peso minimizar (TIEMPO, COSTO, DISTANCIA, TRANSBORDOS)
+     * return: ResultadoFloyd con las matrices de distancias y predecesores
      */
     public static ResultadoFloyd floyd(GrafoTransporte grafo, Criterio criterio) {
 
         List<Parada> paradas = new ArrayList<>(grafo.getGrafo().keySet());
 
-        // Inicializar matrices
         Map<Parada, Map<Parada, Double>> dist = new HashMap<>();
-        Map<Parada, Map<Parada, Parada>> pred = new HashMap<>();
+        Map<Parada, Map<Parada, Parada>> next = new HashMap<>(); // next[i][j] = siguiente nodo desde i hacia j
 
+        // Inicializar matrices
         for (Parada p : paradas) {
             dist.put(p, new HashMap<>());
-            pred.put(p, new HashMap<>());
+            next.put(p, new HashMap<>());
 
             for (Parada q : paradas) {
                 dist.get(p).put(q, p.equals(q) ? 0.0 : Double.MAX_VALUE);
-                pred.get(p).put(q, null);
+                next.get(p).put(q, null);
             }
         }
 
-        // Cargar aristas directas
+        // Cargar aristas directas — next[origen][destino] = destino (salto directo)
         for (Parada origen : paradas) {
             for (Ruta ruta : grafo.getVecinos(origen)) {
                 Parada destino = ruta.getDestino();
                 double peso    = getPeso(ruta, criterio);
 
-                // Solo actualiza si mejora (puede haber aristas paralelas)
                 if (peso < dist.get(origen).get(destino)) {
                     dist.get(origen).put(destino, peso);
-                    pred.get(origen).put(destino, destino);
+                    next.get(origen).put(destino, destino); // el siguiente paso desde origen hacia destino ES destino
                 }
             }
         }
@@ -52,7 +51,7 @@ public class Floyd_Warshall {
         for (Parada k : paradas) {
             for (Parada i : paradas) {
                 double distIK = dist.get(i).get(k);
-                if (distIK == Double.MAX_VALUE) continue; // evita overflow
+                if (distIK == Double.MAX_VALUE) continue;
 
                 for (Parada j : paradas) {
                     double distKJ = dist.get(k).get(j);
@@ -62,13 +61,14 @@ public class Floyd_Warshall {
 
                     if (nueva < dist.get(i).get(j)) {
                         dist.get(i).put(j, nueva);
-                        pred.get(i).put(j, pred.get(i).get(k));
+                        // El siguiente paso desde i hacia j es el mismo que desde i hacia k
+                        next.get(i).put(j, next.get(i).get(k));
                     }
                 }
             }
         }
 
-        return new ResultadoFloyd(dist, pred, paradas);
+        return new ResultadoFloyd(dist, next, paradas);
     }
 
     /*
