@@ -3,6 +3,7 @@ package org.gps.gpsproject.grafo;
 import com.brunomnsilva.smartgraph.graph.Digraph;
 import com.brunomnsilva.smartgraph.graph.DigraphEdgeList;
 import com.brunomnsilva.smartgraph.graph.Vertex;
+import org.gps.gpsproject.modelo.Criterio;
 import org.gps.gpsproject.modelo.Parada;
 import org.gps.gpsproject.modelo.Ruta;
 
@@ -76,6 +77,25 @@ public class GrafoTransporte {
         return false;
     }
 
+    public boolean existeRutaNegativa(Criterio c){
+
+        for(Parada p: grafo.keySet()){
+            for(Ruta r: grafo.get(p)){
+
+               Double peso = switch (c){
+                   case TIEMPO -> r.getTiempo();
+                   case COSTO -> r.getCosto();
+                   case DISTANCIA -> r.getDistancia();
+                   case TRANSBORDOS -> (double)r.getTransbordo();
+               };
+
+               if(peso <0) return true;
+            }
+        }
+
+        return false;
+    }
+
     public Map<Parada, List<Ruta>> getGrafo(){
         return grafo;
     }
@@ -98,4 +118,6 @@ public class GrafoTransporte {
 
         return smartGrafo;
     }
+
+
 }

@@ -77,13 +77,25 @@ public class RutaFormularioControlador {
             double costo      = Double.parseDouble(txtCosto.getText().trim());
             int    transbordo = Integer.parseInt(txtTransbordo.getText().trim());
 
-            if (tiempo < 0 || distancia < 0 || costo < 0 || transbordo < 0) {
-                mostrarError("Los valores no pueden ser negativos.");
+            // Tiempo, distancia y transbordo nunca pueden ser negativos
+            if (tiempo < 0 || distancia < 0 || transbordo < 0) {
+                mostrarError("Tiempo, distancia y transbordos no pueden ser negativos.");
                 return;
             }
 
+            // El costo SÍ puede ser negativo (descuento/subsidio en la ruta)
+            // Se muestra un aviso informativo pero no bloquea el guardado
+            if (costo < 0) {
+                Alert aviso = new Alert(Alert.AlertType.INFORMATION);
+                aviso.setTitle("Costo negativo");
+                aviso.setHeaderText("Ruta con descuento detectada");
+                aviso.setContentText("Esta ruta tiene un costo negativo ($" + costo + ").\n" +
+                        "Esto representa un subsidio o descuento especial.\n" +
+                        "Usa Bellman-Ford para calcular rutas que incluyan esta ruta.");
+                aviso.showAndWait();
+            }
+
             if (modoEdicion) {
-                // Eliminar la ruta original y crear la nueva
                 grafo.deleteRuta(origenOriginal, destinoOriginal);
             }
 
@@ -97,7 +109,6 @@ public class RutaFormularioControlador {
             mostrarError("Tiempo, distancia, costo y transbordo deben ser números válidos.");
         }
     }
-
     @FXML
     private void cancelar() {
         cerrarVentana();

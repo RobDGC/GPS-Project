@@ -18,15 +18,12 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.util.Duration;
-import org.gps.gpsproject.algoritmos.Conexo;
-import org.gps.gpsproject.algoritmos.Dijkstra;
-import org.gps.gpsproject.algoritmos.ResultadoDijkstra;
+import org.gps.gpsproject.algoritmos.*;
 import org.gps.gpsproject.grafo.GrafoTransporte;
 import org.gps.gpsproject.modelo.Criterio;
 import org.gps.gpsproject.modelo.FiltroActual;
 import org.gps.gpsproject.modelo.Parada;
 import org.gps.gpsproject.modelo.Ruta;
-import org.gps.gpsproject.algoritmos.Floyd_Warshall;
 
 import java.net.URI;
 import java.util.*;
@@ -75,11 +72,13 @@ public class MapaControlador {
         ));
         cbFiltro.setValue("Tiempo");
         cbFiltro.setOnAction(e -> {
+
+
             FiltroActual.setFiltro(cbFiltro.getValue());
             construirGrafo();
         });
 
-        cbAlgoritmo.setItems(FXCollections.observableArrayList("Dijkstra", "Floyd-Warshall"));
+        cbAlgoritmo.setItems(FXCollections.observableArrayList("Dijkstra", "Floyd-Warshall", "Bellman-Ford"));
         cbAlgoritmo.setValue("Dijkstra");
 
         construirGrafo();
@@ -309,7 +308,7 @@ public class MapaControlador {
         String filtro  = cbFiltro.getValue();
         String algoritmo = cbAlgoritmo.getValue();
 
-        // Validar que origen y destino estén seleccionados
+        // Validaciones
         if (origen == null && destino == null) {
             new Alert(Alert.AlertType.WARNING, "Debes seleccionar un origen y un destino.").showAndWait();
             return;
@@ -327,15 +326,11 @@ public class MapaControlador {
             return;
         }
 
-        if (origen == null || destino == null || filtro == null || algoritmo == null) return;
-
         if (!esConexo) {
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setTitle("Red no conexa");
             alert.setHeaderText("No se puede buscar rutas");
-            alert.setContentText("La red de transporte no es completamente conexa. " +
-                    "Algunos nodos están desconectados (marcados en rojo). " +
-                    "Agrega rutas para conectar todos los nodos antes de buscar.");
+            alert.setContentText("La red de transporte no es completamente conexa.");
             alert.showAndWait();
             return;
         }
@@ -351,12 +346,34 @@ public class MapaControlador {
             default           -> Criterio.TIEMPO;
         };
 
-        // Seleccionar algoritmo
-        List<Parada> camino = switch (algoritmo) {
-            case "Floyd-Warshall" -> Floyd_Warshall.caminoMasCorto(grafo, origen, destino, criterio);
-            default               -> Dijkstra.caminoMasCorto(grafo, origen, destino, criterio);
-        };
+        // 🔥 Detectar pesos negativos
+        boolean hayPesosNegativos = grafo.existeRutaNegativa(criterio);
 
+        List<Parada> camino;
+
+        // 🔥 FORZAR Bellman-Ford si hay costos negativos
+        if (criterio == Criterio.COSTO && hayPesosNegativos) {
+
+            if (algoritmo.equals("Dijkstra")) {
+                new Alert(Alert.AlertType.WARNING,
+                        "Dijkstra no funciona con costos negativos.\nSe usará Bellman-Ford automáticamente."
+                ).showAndWait();
+            }
+
+            camino = BellmanFord.caminoMasCorto(grafo, origen, destino, criterio);
+            lblAlgoritmo.setText("Bellman-Ford (auto)");
+
+        } else {
+            camino = switch (algoritmo) {
+                case "Floyd-Warshall" -> Floyd_Warshall.caminoMasCorto(grafo, origen, destino, criterio);
+                case "Bellman-Ford" -> BellmanFord.caminoMasCorto(grafo, origen, destino, criterio);
+                default -> Dijkstra.caminoMasCorto(grafo, origen, destino, criterio);
+            };
+
+            lblAlgoritmo.setText(algoritmo);
+        }
+
+        // Si no hay camino
         if (camino.isEmpty()) {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Sin ruta");
@@ -366,6 +383,7 @@ public class MapaControlador {
             return;
         }
 
+        // Calcular métricas
         double totalTiempo = 0, totalDistancia = 0, totalCosto = 0;
         int totalTransbordo = 0;
 
@@ -392,17 +410,9 @@ public class MapaControlador {
         lblDistancia.setText(totalDistancia + " km");
         lblCosto.setText("$" + totalCosto);
         lblTransbordo.setText(String.valueOf(totalTransbordo));
-        lblAlgoritmo.setText(algoritmo);
 
         caminoPendiente = camino;
         criterioPendiente = criterio;
-
-        lblRuta.setText(rutaTexto);
-        lblTiempo.setText(totalTiempo + " min");
-        lblDistancia.setText(totalDistancia + " km");
-        lblCosto.setText("$" + totalCosto);
-        lblTransbordo.setText(String.valueOf(totalTransbordo));
-        lblAlgoritmo.setText(algoritmo);
     }
 
     private void colorearNodosNoAlcanzables(Parada origen, Criterio criterio) {
