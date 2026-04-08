@@ -6,11 +6,50 @@ import org.gps.gpsproject.modelo.Ruta;
 
 import java.util.*;
 
+/*
+ * Proporciona un algoritmo alternativo de búsqueda de rutas basado en BFS
+ *
+ * A diferencia de Dijkstra, Bellman-Ford y Floyd-Warshall que minimizan
+ * un criterio de peso, este algoritmo encuentra el camino con la
+ * menor cantidad de paradas intermedias, ignorando completamente
+ * los pesos de las aristas.
+ *
+ * Es útil cuando el usuario prefiere el camino más directo en términos
+ * de trasbordos o paradas, sin importar tiempo, costo o distancia.
+ *
+ * Complejidad general del algoritmo:
+ *   Big O: O(V + E) — BFS visita cada vértice y arista como máximo una vez.
+ *   Theta: Θ(V + E)
+ *   Omega: Ω(1) — si origen y destino son adyacentes directamente.
+ * 
+ * Donde V = número de paradas y E = número de rutas.
+ */
 public class RutaAlternativa {
 
     /*
-     * Devuelve el camino con la menor cantidad de paradas
-     * entre origen y destino, sin importar pesos de aristas.
+     * Encuentra el camino con la menor cantidad de paradas entre Parada origen
+     * y Parada destino usando BFS sobre el grafo de transporte.
+     *
+     * BFS garantiza que el primer camino encontrado hacia el destino
+     * es el de menor número de saltos (paradas intermedias), ya que explora
+     * los nodos por niveles de distancia creciente.
+     *
+     * Si origen y destino son iguales, retorna inmediatamente una lista vacía.
+     *
+     * Complejidad:
+     *   Big O: O(V + E) — cada parada se encola como máximo una vez y cada
+     *       ruta se examina como máximo una vez al procesar su parada origen.
+     *   Theta: Θ(V + E) — en grafos conectados el BFS siempre recorre
+     *       el conjunto completo de vértices y aristas alcanzables.
+     *   Omega: Ω(1) — si origen == destino se retorna de inmediato sin
+     *       recorrer el grafo.
+     *
+     * @param grafo   El grafo de transporte sobre el que se ejecuta BFS.
+     * @param origen  Parada desde donde inicia la búsqueda.
+     * @param destino Parada que se desea alcanzar.
+     * @return Lista ordenada de paradas desde origen hasta destino con
+     *         el mínimo número de saltos, o lista vacía si no existe camino
+     *         o si origen y destino son la misma parada.
      */
     public static List<Parada> caminoMenosParadas(GrafoTransporte grafo,
                                                   Parada origen,
@@ -18,9 +57,7 @@ public class RutaAlternativa {
         if (origen.equals(destino)) return Collections.emptyList();
 
         Queue<Parada> cola = new LinkedList<>();
-        // Mapa: parada -> de dónde vine (para reconstruir el camino)
         Map<Parada, Parada> padre = new HashMap<>();
-        // Conjunto de visitados
         Set<Parada> visitados = new HashSet<>();
 
         cola.add(origen);
@@ -38,7 +75,6 @@ public class RutaAlternativa {
                 visitados.add(vecino);
                 padre.put(vecino, actual);
 
-                // Llegamos al destino: reconstruir y devolver
                 if (vecino.equals(destino)) {
                     return reconstruir(padre, origen, destino);
                 }
@@ -50,6 +86,20 @@ public class RutaAlternativa {
         return Collections.emptyList();
     }
 
+    /*
+     * Reconstruye el camino desde Parada origen hasta Parada destino
+     * siguiendo el mapa de padres generado por BFS en sentido inverso.
+     *
+     * Complejidad:
+     *   Big O: O(V) — en el peor caso el camino pasa por todos los vértices.
+     *   Theta: Θ(k) — donde k es la longitud real del camino encontrado.
+     *   Omega: Ω(1) — si origen y destino son adyacentes, el camino tiene longitud 2.
+     *
+     * @param padre   Mapa de predecesores generado por BFS (parada → parada desde la que se llegó).
+     * @param origen  Parada de inicio del camino.
+     * @param destino Parada de destino del camino.
+     * @return Lista ordenada de paradas del camino desde origen hasta destino.
+     */
     private static List<Parada> reconstruir(Map<Parada, Parada> padre,
                                             Parada origen,
                                             Parada destino) {

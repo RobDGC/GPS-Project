@@ -7,8 +7,50 @@ import org.gps.gpsproject.modelo.Ruta;
 
 import java.util.*;
 
+/*
+ * Implementación del algoritmo de Bellman-Ford para encontrar el camino
+ * más corto desde un origen dado en el grafo de transporte.
+ *
+ * A diferencia de Dijkstra, Bellman-Ford soporta aristas con pesos negativos
+ * y detecta la existencia de ciclos negativos, retornando una lista vacía en ese caso.
+ * Se usa automáticamente cuando el criterio es COSTO y existen rutas con costo negativo.
+ *
+ * Complejidad general del algoritmo:
+ *   Big O: O(V × E) — V-1 iteraciones, cada una recorre todas las aristas.
+ *   Theta: Θ(V × E)
+ *   Omega: Ω(E) — si el grafo converge en la primera iteración.
+ *
+ *  Donde V = número de paradas y E = número de rutas.
+ */
 public class BellmanFord {
 
+    /*
+     * Calcula el camino más corto entre {@code origen} y {@code destino}
+     * utilizando el algoritmo de Bellman-Ford.
+     *
+     * El proceso se divide en tres fases:
+     *   Inicialización de distancias en infinito (excepto el origen en 0).
+     *   Relajación de todas las aristas repetida V-1 veces.
+     *   Detección de ciclos negativos: si aún se puede relajar, hay ciclo negativo.
+     *
+     * Incluye una optimización de parada temprana: si en una iteración completa
+     * no se actualiza ninguna distancia, el algoritmo termina antes de las V-1
+     * iteraciones.
+     *
+     * Complejidad:
+     *   Big O: O(V × E) — en el peor caso se realizan V-1 pasadas completas
+     *       sobre todas las aristas, más una pasada extra para detectar ciclos negativos.
+     *   Theta: Θ(V × E) — comportamiento esperado en grafos densos sin convergencia temprana.
+     *   Omega: Ω(E) — si en la primera iteración ya no hay cambios (grafo trivial o
+     *       conexión directa), la optimización de parada temprana detiene el algoritmo.
+     *
+     * @param grafo    El grafo de transporte sobre el que se calcula el camino.
+     * @param origen   Parada de inicio de la búsqueda.
+     * @param destino  Parada de destino de la búsqueda.
+     * @param criterio Criterio de peso a minimizar (TIEMPO, COSTO, DISTANCIA, TRANSBORDOS).
+     * @return Lista ordenada de paradas desde origen hasta destino,
+     *         o lista vacía si no existe camino o se detectó un ciclo negativo.
+     */
     public static List<Parada> caminoMasCorto(GrafoTransporte grafo,
                                               Parada origen,
                                               Parada destino,
@@ -54,7 +96,7 @@ public class BellmanFord {
             if (!actualizado) break;
         }
 
-        // Detección de ciclos negativos (opcional pero robusto)
+        // Detección de ciclos negativos
         for (Parada u : paradas) {
             if (aristas.get(u) == Double.MAX_VALUE) continue;
             for (Ruta r : grafo.getVecinos(u)) {
@@ -68,10 +110,23 @@ public class BellmanFord {
             }
         }
 
-        // Reconstruir camino
         return reconstruir(nodos, origen, destino);
     }
 
+    /*
+     * Reconstruye el camino desde {@code origen} hasta {@code destino}
+     * siguiendo el mapa de predecesores en sentido inverso.
+     *
+     * Complejidad:
+     *   Big O: O(V) — en el peor caso el camino recorre todos los vértices.
+     *   Theta: Θ(k) — donde k es la longitud real del camino.
+     *   Omega: Ω(1) — si origen y destino son adyacentes o no hay camino.
+     *
+     * @param prev    Mapa de predecesores generado por Bellman-Ford.
+     * @param origen  Parada de inicio del camino.
+     * @param destino Parada final del camino.
+     * @return Lista ordenada de paradas del camino, o lista vacía si no existe.
+     */
     private static List<Parada> reconstruir(Map<Parada, Parada> prev,
                                             Parada origen,
                                             Parada destino) {
@@ -90,6 +145,18 @@ public class BellmanFord {
         return camino;
     }
 
+    /*
+     * Selecciona y retorna el peso de una ruta según el criterio indicado.
+     *
+     * Complejidad:
+     *   Big O: O(1)
+     *   Big Θ: Θ(1)
+     *   Big Ω: Ω(1)
+     *
+     * @param ruta     La ruta de la que se extrae el peso.
+     * @param criterio Criterio que determina qué atributo usar como peso.
+     * @return El valor numérico del peso correspondiente al criterio.
+     */
     private static double getPeso(Ruta ruta, Criterio criterio) {
         return switch (criterio) {
             case TIEMPO      -> ruta.getTiempo();
