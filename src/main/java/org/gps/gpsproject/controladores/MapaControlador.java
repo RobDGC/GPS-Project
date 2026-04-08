@@ -45,6 +45,7 @@ public class MapaControlador {
     @FXML private Pane overlayArrastre;
     @FXML private ComboBox<String> cbAlgoritmo;
     @FXML private Label lblAlgoritmo;
+    @FXML private Button btnRutaAlternativa;
 
     private List<Parada> caminoPendiente = null;
     private Criterio criterioPendiente = null;
@@ -504,6 +505,83 @@ public class MapaControlador {
         cbDestino.setItems(FXCollections.observableArrayList(paradas));
         esConexo = Conexo.esConexo(grafo);
         lblConexo.setText(esConexo ? "Es conexo" : "No es conexo");
+        construirGrafo();
+    }
+
+    @FXML
+    private void buscarRutaAlternativa() {
+        Parada origen  = cbOrigen.getValue();
+        Parada destino = cbDestino.getValue();
+
+        if (origen == null && destino == null) {
+            new Alert(Alert.AlertType.WARNING, "Debes seleccionar un origen y un destino.").showAndWait();
+            return;
+        }
+        if (origen == null) {
+            new Alert(Alert.AlertType.WARNING, "Debes seleccionar un origen.").showAndWait();
+            return;
+        }
+        if (destino == null) {
+            new Alert(Alert.AlertType.WARNING, "Debes seleccionar un destino.").showAndWait();
+            return;
+        }
+        if (origen.equals(destino)) {
+            new Alert(Alert.AlertType.WARNING, "El origen y el destino no pueden ser iguales.").showAndWait();
+            return;
+        }
+
+        if (!esConexo) {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Red no conexa");
+            alert.setHeaderText("No se puede buscar rutas");
+            alert.setContentText("La red de transporte no es completamente conexa.");
+            alert.showAndWait();
+            return;
+        }
+
+        List<Parada> camino = RutaAlternativa.caminoMenosParadas(grafo, origen, destino);
+
+        if (camino.isEmpty()) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Sin ruta");
+            alert.setHeaderText(null);
+            alert.setContentText("No existe un camino entre " + origen + " y " + destino + ".");
+            alert.showAndWait();
+            return;
+        }
+
+        // Calcular totales del camino encontrado
+        double totalTiempo = 0, totalDistancia = 0, totalCosto = 0;
+        int totalTransbordo = 0;
+
+        for (int i = 0; i < camino.size() - 1; i++) {
+            Parada a = camino.get(i);
+            Parada b = camino.get(i + 1);
+            for (Ruta r : grafo.getVecinos(a)) {
+                if (r.getDestino().equals(b)) {
+                    totalTiempo     += r.getTiempo();
+                    totalDistancia  += r.getDistancia();
+                    totalCosto      += r.getCosto();
+                    totalTransbordo += r.getTransbordo();
+                    break;
+                }
+            }
+        }
+
+        String rutaTexto = camino.stream()
+                .map(Parada::getId)
+                .collect(java.util.stream.Collectors.joining(" → "));
+
+        lblRuta.setText(rutaTexto);
+        lblTiempo.setText(totalTiempo + " min");
+        lblDistancia.setText(totalDistancia + " km");
+        lblCosto.setText("$" + totalCosto);
+        lblTransbordo.setText(String.valueOf(totalTransbordo));
+        lblAlgoritmo.setText("BFS (menos paradas)");
+
+        // Resaltar camino en el grafo
+        caminoPendiente = camino;
+        criterioPendiente = Criterio.TIEMPO; // criterio referencial para colorear no alcanzables
         construirGrafo();
     }
 
