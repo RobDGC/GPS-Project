@@ -1,14 +1,99 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.shape.*?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
+<AnchorPane xmlns="http://javafx.com/javafx/17.0.12"
+            xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="org.gps.gpsproject.controladores.InicioControlador"
-            prefHeight="400.0" prefWidth="600.0">
+            style="-fx-background-color: #F0F0F5;">
+
+    <VBox alignment="CENTER" spacing="30"
+          AnchorPane.topAnchor="0"
+          AnchorPane.bottomAnchor="0"
+          AnchorPane.leftAnchor="0"
+          AnchorPane.rightAnchor="0">
+
+        <!-- Icono decorativo -->
+        <Label text="🗺"
+               style="-fx-font-size: 80px;"/>
+
+        <!-- Título principal -->
+        <Label text="Sistema de Gestión de Rutas de Transporte"
+               style="-fx-font-size: 32px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"
+               wrapText="true"
+               textAlignment="CENTER"
+               maxWidth="700"/>
+
+        <!-- Subtítulo -->
+        <Label text="Pontificia Universidad Católica Madre y Maestra"
+               style="-fx-font-size: 16px; -fx-text-fill: #7f8c8d;"/>
+
+        <Label text="Facultad de Ciencias e Ingeniería · Algoritmos Clásicos y Estructuras de Datos"
+               style="-fx-font-size: 13px; -fx-text-fill: #95a5a6;"/>
+
+        <!-- Separador -->
+        <Separator maxWidth="500"/>
+
+        <!-- Tarjetas de algoritmos -->
+        <HBox spacing="20" alignment="CENTER">
+
+            <VBox alignment="CENTER" spacing="8"
+                  style="-fx-background-color: white; -fx-border-color: #dcdcdc; -fx-border-radius: 10; -fx-background-radius: 10; -fx-padding: 20 25 20 25;"
+                  prefWidth="160">
+                <Label text="⚡" style="-fx-font-size: 28px;"/>
+                <Label text="Dijkstra" style="-fx-font-weight: bold; -fx-font-size: 14px; -fx-text-fill: #2c3e50;"/>
+                <Label text="Ruta más corta" style="-fx-font-size: 11px; -fx-text-fill: #7f8c8d;" wrapText="true" textAlignment="CENTER"/>
+            </VBox>
+
+            <VBox alignment="CENTER" spacing="8"
+                  style="-fx-background-color: white; -fx-border-color: #dcdcdc; -fx-border-radius: 10; -fx-background-radius: 10; -fx-padding: 20 25 20 25;"
+                  prefWidth="160">
+                <Label text="🔁" style="-fx-font-size: 28px;"/>
+                <Label text="Floyd-Warshall" style="-fx-font-weight: bold; -fx-font-size: 14px; -fx-text-fill: #2c3e50;"/>
+                <Label text="Todas las rutas" style="-fx-font-size: 11px; -fx-text-fill: #7f8c8d;" wrapText="true" textAlignment="CENTER"/>
+            </VBox>
+
+            <VBox alignment="CENTER" spacing="8"
+                  style="-fx-background-color: white; -fx-border-color: #dcdcdc; -fx-border-radius: 10; -fx-background-radius: 10; -fx-padding: 20 25 20 25;"
+                  prefWidth="160">
+                <Label text="💸" style="-fx-font-size: 28px;"/>
+                <Label text="Bellman-Ford" style="-fx-font-weight: bold; -fx-font-size: 14px; -fx-text-fill: #2c3e50;"/>
+                <Label text="Costos negativos" style="-fx-font-size: 11px; -fx-text-fill: #7f8c8d;" wrapText="true" textAlignment="CENTER"/>
+            </VBox>
+
+            <VBox alignment="CENTER" spacing="8"
+                  style="-fx-background-color: white; -fx-border-color: #dcdcdc; -fx-border-radius: 10; -fx-background-radius: 10; -fx-padding: 20 25 20 25;"
+                  prefWidth="160">
+                <Label text="🔀" style="-fx-font-size: 28px;"/>
+                <Label text="BFS" style="-fx-font-weight: bold; -fx-font-size: 14px; -fx-text-fill: #2c3e50;"/>
+                <Label text="Menos paradas" style="-fx-font-size: 11px; -fx-text-fill: #7f8c8d;" wrapText="true" textAlignment="CENTER"/>
+            </VBox>
+
+        </HBox>
+
+        <!-- Separador -->
+        <Separator maxWidth="500"/>
+
+        <!-- Integrantes -->
+        <VBox alignment="CENTER" spacing="6">
+            <Label text="Integrantes"
+                   style="-fx-font-size: 13px; -fx-text-fill: #95a5a6; -fx-font-weight: bold;"/>
+            <Label fx:id="lblIntegrante1"
+                   text="Estudiante 1"
+                   style="-fx-font-size: 15px; -fx-text-fill: #2c3e50;"/>
+            <Label fx:id="lblIntegrante2"
+                   text="Estudiante 2"
+                   style="-fx-font-size: 15px; -fx-text-fill: #2c3e50;"/>
+        </VBox>
+
+        <!-- Año -->
+        <Label fx:id="lblAnio"
+               text="2025"
+               style="-fx-font-size: 12px; -fx-text-fill: #bdc3c7;"/>
+
+    </VBox>
 
 </AnchorPane>
