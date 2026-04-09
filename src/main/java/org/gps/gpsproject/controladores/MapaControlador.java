@@ -154,7 +154,26 @@ public class MapaControlador {
     }
 
     private void inicializarGraphView(SmartGraphPanel<Parada, Ruta> graphView) {
-        graphView.init();
+
+        // Si este graphView ya fue reemplazado, ignorar
+        if (graphView != graphViewActual) return;
+
+        // Si no tiene escena o dimensiones, reintentar con delay en vez de runLater recursivo
+        if (graphView.getScene() == null || graphView.getWidth() == 0 || graphView.getHeight() == 0) {
+            Timeline retry = new Timeline(new KeyFrame(Duration.millis(100), e -> inicializarGraphView(graphView)));
+            retry.play();
+            return;
+        }
+
+        // Envolver init() en try-catch para que el spam no rompa el programa
+        try {
+            graphView.init();
+        } catch (IllegalStateException e) {
+            // Panel aún no listo, reintentar
+            Timeline retry = new Timeline(new KeyFrame(Duration.millis(100), e2 -> inicializarGraphView(graphView)));
+            retry.play();
+            return;
+        }
 
         if (!posicionesGuardadas.isEmpty()) {
             smartGraphActual.vertices().forEach(v -> {
@@ -169,13 +188,11 @@ public class MapaControlador {
             Platform.runLater(() -> aplicarLayoutFuerzaDirigida(graphView));
         }
 
-        // Aplicar estado de arrastre segun el checkbox
         aplicarEstadoArrastre();
 
         Timeline delayColor = new Timeline(new KeyFrame(Duration.millis(400), e -> {
+            if (graphView != graphViewActual) return; // verificar de nuevo
             if (!esConexo) colorearTodosLosNodosNoAlcanzables();
-
-            // Aplicar camino pendiente si hay uno
             if (caminoPendiente != null) {
                 resaltarCamino(caminoPendiente);
                 colorearNodosNoAlcanzables(caminoPendiente.get(0), criterioPendiente);
