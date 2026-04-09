@@ -47,9 +47,9 @@ public class Floyd_Warshall {
      * 
      * Uso de memoria: O(V²) para las matrices {@code aristas} y {@code nodos}.
      *
-     * @param grafo El grafo de transporte sobre el que se ejecuta el algoritmo.
-     * @param criterio Criterio de peso a minimizar (TIEMPO, COSTO, DISTANCIA, TRANSBORDOS).
-     * @return ResultadoFloyd con las matrices de distancias mínimas y predecesores
+     * param grafo El grafo de transporte sobre el que se ejecuta el algoritmo.
+     * param criterio Criterio de peso a minimizar (TIEMPO, COSTO, DISTANCIA, TRANSBORDOS).
+     * return ResultadoFloyd con las matrices de distancias mínimas y predecesores
      *         para todos los pares de paradas.
      */
     public static ResultadoFloyd floyd(GrafoTransporte grafo, Criterio criterio) {
@@ -119,11 +119,11 @@ public class Floyd_Warshall {
      *   Theta: Θ(V³)
      *   Omega: Ω(V³)
      *
-     * @param grafo    El grafo de transporte.
-     * @param origen   Parada de inicio del camino.
-     * @param destino  Parada de destino del camino.
-     * @param criterio Criterio de peso a minimizar.
-     * @return Lista ordenada de paradas desde origen hasta destino,
+     * param grafo    El grafo de transporte.
+     * param origen   Parada de inicio del camino.
+     * param destino  Parada de destino del camino.
+     * param criterio Criterio de peso a minimizar.
+     * return Lista ordenada de paradas desde origen hasta destino,
      *         o lista vacía si no existe camino.
      */
     public static List<Parada> caminoMasCorto(GrafoTransporte grafo,
@@ -141,9 +141,9 @@ public class Floyd_Warshall {
      *   Theta: Θ(1)
      *   Omega: Ω(1)
      * 
-     * @param ruta     La ruta de la que se extrae el peso.
-     * @param criterio Criterio que determina qué atributo usar como peso.
-     * @return El valor numérico del peso correspondiente al criterio.
+     * param ruta     La ruta de la que se extrae el peso.
+     * param criterio Criterio que determina qué atributo usar como peso.
+     * return El valor numérico del peso correspondiente al criterio.
      */
     private static double getPeso(Ruta ruta, Criterio criterio) {
         return switch (criterio) {

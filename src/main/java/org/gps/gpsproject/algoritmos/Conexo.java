@@ -45,8 +45,8 @@ public class Conexo {
      *   Omega: Ω(V) — si el primer DFS no alcanza todos los nodos, retorna
      *       boolean false sin ejecutar el segundo recorrido.
      *
-     * @param grafo El grafo de transporte a analizar.
-     * @return boolean true si el grafo es fuertemente conexo, boolean false en caso contrario.
+     * param grafo El grafo de transporte a analizar.
+     * return boolean true si el grafo es fuertemente conexo, boolean false en caso contrario.
      */
     public static boolean esConexo(GrafoTransporte grafo) {
         Map<Parada, List<Ruta>> mapa = grafo.getGrafo();
@@ -70,11 +70,10 @@ public class Conexo {
      *   Big O: O(V + E) — cada vértice se apila una vez y cada arista se examina una vez.
      *   Theta: Θ(V + E)
      *   Omega: Ω(V) — si los nodos no tienen aristas salientes, solo se procesan vértices.
-     * 
      *
-     * @param mapa   Estructura del grafo original (parada → lista de rutas).
-     * @param origen Parada desde donde inicia el DFS.
-     * @return {@code true} si todos los vértices son alcanzables desde {@code origen}.
+     * param mapa   Estructura del grafo original (parada → lista de rutas).
+     * param origen Parada desde donde inicia el DFS.
+     * return {@code true} si todos los vértices son alcanzables desde {@code origen}.
      */
     private static boolean grafoOriginal(Map<Parada, List<Ruta>> mapa, Parada origen) {
         Set<Parada> visitados = new HashSet<>();
@@ -106,8 +105,8 @@ public class Conexo {
      *   Theta: Θ(V + E)
      *   Omega: Ω(V) — si el grafo no tiene aristas, solo se crean las listas vacías.
      *
-     * @param mapa Estructura del grafo original (parada → lista de rutas).
-     * @return Nuevo mapa con las aristas en dirección opuesta (parada → lista de paradas origen).
+     * param mapa Estructura del grafo original (parada → lista de rutas).
+     * return Nuevo mapa con las aristas en dirección opuesta (parada → lista de paradas origen).
      */
     private static Map<Parada, List<Parada>> invertirGrafo(Map<Parada, List<Ruta>> mapa) {
         Map<Parada, List<Parada>> invertido = new HashMap<>();
@@ -133,10 +132,10 @@ public class Conexo {
      *   Omega: Ω(V) — si los nodos no tienen aristas en el grafo invertido.
      * 
      *
-     * @param invertido Grafo con aristas invertidas (parada → lista de predecesores).
-     * @param origen    Parada desde donde inicia el DFS.
-     * @param total     Número total de vértices esperados para validar conectividad.
-     * @return boolean true si todos los vértices son alcanzables desde Parada origen
+     * param invertido Grafo con aristas invertidas (parada → lista de predecesores).
+     * param origen    Parada desde donde inicia el DFS.
+     * param total     Número total de vértices esperados para validar conectividad.
+     * return boolean true si todos los vértices son alcanzables desde Parada origen
      *         en el grafo invertido.
      */
     private static boolean grafoInvertido(

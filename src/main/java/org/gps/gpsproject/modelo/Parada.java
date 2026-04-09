@@ -24,8 +24,8 @@ public class Parada {
      *   Theta: Θ(1)
      *   Omega: Ω(1)
      *
-     * @param id     Identificador único de la parada.
-     * @param nombre Nombre descriptivo de la parada.
+     * param id     Identificador único de la parada.
+     * param nombre Nombre descriptivo de la parada.
      */
     public Parada(String id, String nombre) {
         this.id = id;
@@ -40,7 +40,7 @@ public class Parada {
      *   Theta: Θ(1)
      *   Omega: Ω(1)
      *
-     * @return El ID único de la parada.
+     * return El ID único de la parada.
      */
     public String getId() {
         return id;
@@ -54,7 +54,7 @@ public class Parada {
      *   Theta: Θ(1)
      *   Omega: Ω(1)
      *
-     * @return El nombre de la parada.
+     * return El nombre de la parada.
      */
     public String getNombre() {
         return nombre;
@@ -68,7 +68,7 @@ public class Parada {
      *   Theta: Θ(1)
      *   Omega: Ω(1)
      *
-     * @param nombre El nuevo nombre de la parada.
+     * param nombre El nuevo nombre de la parada.
      */
     public void setNombre(String nombre) {
         this.nombre = nombre;
@@ -86,8 +86,8 @@ public class Parada {
      *   Omega: Ω(1) — si los IDs difieren en el primer carácter.
      * 
      *
-     * @param aux El objeto a comparar.
-     * @return boolean true si Object aux es una Parada con el mismo ID.
+     * param aux El objeto a comparar.
+     * return boolean true si Object aux es una Parada con el mismo ID.
      */
     @Override
     public boolean equals(Object aux){
@@ -108,7 +108,7 @@ public class Parada {
      *   Theta: Θ(L)
      *   Omega: Ω(L)
      *
-     * @return El hash code del ID de la parada.
+     * return El hash code del ID de la parada.
      */
     @Override
     public int hashCode() {
@@ -125,7 +125,7 @@ public class Parada {
      *   Theta: Θ(L)
      *   Omega: Ω(L) 
      *
-     * @return Cadena en formato "nombre (id)".
+     * return Cadena en formato "nombre (id)".
      */
     @Override
     public String toString() {
