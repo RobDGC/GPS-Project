@@ -6,21 +6,20 @@ import org.gps.gpsproject.modelo.Ruta;
 import java.util.*;
 import org.gps.gpsproject.modelo.Criterio;
 
-/**
+/*
  * Implementación del algoritmo de Dijkstra para encontrar el camino más corto
  * en el grafo de transporte.
  *
- * <p>Dijkstra funciona correctamente únicamente cuando todos los pesos de las
+ * Dijkstra funciona correctamente únicamente cuando todos los pesos de las
  * aristas son no negativos. Si existen costos negativos, se debe usar
- * {@link BellmanFord} en su lugar.</p>
+ * BellmanFord en su lugar.
  *
- * <p><b>Complejidad general del algoritmo:</b></p>
- * <ul>
- *   <li>Big O (peor caso):   O((V + E) log V)</li>
- *   <li>Big Θ (caso promedio): Θ((V + E) log V)</li>
- *   <li>Big Ω (mejor caso):  Ω(V log V)</li>
- * </ul>
- * <p>Donde V = número de paradas (vértices) y E = número de rutas (aristas).</p>
+ * Complejidad general del algoritmo:
+ *   Big O:   O((V + E) log V)
+ *   Theta: Θ((V + E) log V)
+ *   Omega:  Ω(V log V)
+ * 
+ * Donde V = número de paradas (vértices) y E = número de rutas (aristas).
  */
 public class Dijkstra {
 
@@ -54,7 +53,7 @@ public class Dijkstra {
      * calculando el camino de menor costo hacia todas las demás paradas.
      *
      * El criterio determina qué atributo de la arista se usa como peso:
-     * tiempo, costo, distancia o número de transbordos.</p>
+     * tiempo, costo, distancia o número de transbordos.
      *
      * Complejidad:
      *   Big O: O((V + E) log V) — cada arista se relaja y cada vértice
@@ -64,10 +63,10 @@ public class Dijkstra {
      *   Omega: Ω(V log V) — incluso en el mejor caso se deben extraer
      *       todos los vértices de la cola.
      *
-     * @param grafo    El grafo de transporte sobre el que se ejecuta el algoritmo.
-     * @param origen   Parada desde donde inicia la búsqueda.
-     * @param criterio Criterio de peso a minimizar (TIEMPO, COSTO, DISTANCIA, TRANSBORDOS).
-     * @return ResultadoDijkstra con las distancias mínimas y los predecesores
+     * param grafo    El grafo de transporte sobre el que se ejecuta el algoritmo.
+     * param origen   Parada desde donde inicia la búsqueda.
+     * param criterio Criterio de peso a minimizar (TIEMPO, COSTO, DISTANCIA, TRANSBORDOS).
+     * return ResultadoDijkstra con las distancias mínimas y los predecesores
      *         de cada parada para reconstruir el camino.
      */
     public static ResultadoDijkstra dijkstra(GrafoTransporte grafo, Parada origen, Criterio criterio) {
@@ -119,9 +118,9 @@ public class Dijkstra {
      *   Theta: Θ(1)
      *   Omega: Ω(1)
      *
-     * @param ruta     La ruta de la que se extrae el peso.
-     * @param criterio Criterio que determina qué atributo usar como peso.
-     * @return El valor numérico del peso correspondiente al criterio.
+     * param ruta     La ruta de la que se extrae el peso.
+     * param criterio Criterio que determina qué atributo usar como peso.
+     * return El valor numérico del peso correspondiente al criterio.
      */
     private static double getPeso(Ruta ruta, Criterio criterio) {
         return switch (criterio) {
@@ -139,16 +138,16 @@ public class Dijkstra {
      * Internamente ejecuta dijkstra y delega la reconstrucción
      * del camino a ResultadoDijkstra.getCaminos(Parada)}.
      *
-     * <p><b>Complejidad:</b></p>
-     *   <li>Big O: O((V + E) log V) — dominado por la ejecución de Dijkstra.</li>
+     * Complejidad:
+     *   Big O: O((V + E) log V) — dominado por la ejecución de Dijkstra.
      *   Theta: Θ((V + E) log V)
      *   Omega: Ω(V log V)
      *
-     * @param grafo    El grafo de transporte.
-     * @param origen   Parada de inicio del camino.
-     * @param destino  Parada de destino del camino.
-     * @param criterio Criterio de peso a minimizar.
-     * @return Lista de paradas en orden desde origen hasta destino,
+     * param grafo    El grafo de transporte.
+     * param origen   Parada de inicio del camino.
+     * param destino  Parada de destino del camino.
+     * param criterio Criterio de peso a minimizar.
+     * return Lista de paradas en orden desde origen hasta destino,
      *         o una lista vacía si no existe camino.
      */
     public static List<Parada> caminoMasCorto(GrafoTransporte grafo,

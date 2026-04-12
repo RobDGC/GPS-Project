@@ -34,9 +34,9 @@ public class ResultadoDijkstra {
      *   Omega: Ω(1)
      * </ul>
      *
-     * @param aristas Mapa parada → distancia mínima desde el origen.
-     * @param nodos   Mapa parada → predecesor en el camino óptimo.
-     * @param origen  Parada de inicio del algoritmo.
+     * param aristas Mapa parada → distancia mínima desde el origen.
+     * param nodos   Mapa parada → predecesor en el camino óptimo.
+     * param origen  Parada de inicio del algoritmo.
      */
     public ResultadoDijkstra(Map<Parada, Double> aristas,
                              Map<Parada, Parada> nodos,
@@ -57,8 +57,8 @@ public class ResultadoDijkstra {
      *   Theta: Θ(k) — donde k es la longitud real del camino encontrado.
      *   Omega: Ω(1) — si el destino no es alcanzable, retorna inmediatamente.
      *
-     * @param destino La parada a la que se quiere llegar.
-     * @return Lista ordenada de paradas desde el origen hasta el destino,
+     * param destino La parada a la que se quiere llegar.
+     * return Lista ordenada de paradas desde el origen hasta el destino,
      *         o lista vacía si no hay camino.
      */
     public List<Parada> getCaminos(Parada destino) {
@@ -84,8 +84,8 @@ public class ResultadoDijkstra {
      *   Omega: Ω(1)
      *
      *
-     * @param destino La parada de la que se quiere conocer el costo mínimo.
-     * @return El costo mínimo acumulado, o Double.MAX_VALUE si no es alcanzable.
+     * param destino La parada de la que se quiere conocer el costo mínimo.
+     * return El costo mínimo acumulado, o Double.MAX_VALUE si no es alcanzable.
      */
     public double getDistancia(Parada destino) {
         return aristas.getOrDefault(destino, Double.MAX_VALUE);
@@ -100,7 +100,7 @@ public class ResultadoDijkstra {
      *   Theta: Θ(1)
      *   Omega: Ω(1)
      *
-     * @return Mapa inmutable de parada → distancia mínima.
+     * return Mapa inmutable de parada → distancia mínima.
      */
     public Map<Parada, Double> getTodasDistancias() {
         return Collections.unmodifiableMap(aristas);

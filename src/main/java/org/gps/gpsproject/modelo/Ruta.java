@@ -41,11 +41,11 @@ public class Ruta {
      *   Theta: Θ(1)
      *   Omega: Ω(1)
      *
-     * @param destino    Parada a la que llega esta ruta.
-     * @param tiempo     Tiempo del trayecto en minutos.
-     * @param distancia  Distancia del trayecto en kilómetros.
-     * @param costo      Costo económico del trayecto.
-     * @param transbordo Número de transbordos requeridos.
+     * param destino    Parada a la que llega esta ruta.
+     * param tiempo     Tiempo del trayecto en minutos.
+     * param distancia  Distancia del trayecto en kilómetros.
+     * param costo      Costo económico del trayecto.
+     * param transbordo Número de transbordos requeridos.
      */
     public Ruta(Parada destino, double tiempo, double distancia, double costo, int transbordo) {
         this.destino = destino;
@@ -67,7 +67,7 @@ public class Ruta {
      *   Theta: Θ(1)
      *   Omega: Ω(1)
      *
-     * @return Cadena con el valor del peso activo y su unidad (ej: "15 min", "8.5 km", "$25").
+     * return Cadena con el valor del peso activo y su unidad (ej: "15 min", "8.5 km", "$25").
      */
     @Override
     public String toString() {
@@ -84,7 +84,7 @@ public class Ruta {
      *
      * Complejidad: O(1) / Θ(1) / Ω(1)
      *
-     * @return La Parada de destino.
+     * return La Parada de destino.
      */
     public Parada getDestino() { return destino; }
 
@@ -93,7 +93,7 @@ public class Ruta {
      *
      * Complejidad: O(1) / Θ(1) / Ω(1)
      *
-     * @return Tiempo en minutos.
+     * return Tiempo en minutos.
      */
     public double getTiempo()     { return tiempo; }
 
@@ -102,7 +102,7 @@ public class Ruta {
      *
      * Complejidad: O(1) / Θ(1) / Ω(1)
      *
-     * @return Distancia en kilómetros.
+     * return Distancia en kilómetros.
      */
     public double getDistancia()  { return distancia; }
 
@@ -111,7 +111,7 @@ public class Ruta {
      *
      * Complejidad: O(1) / Θ(1) / Ω(1)
      *
-     * @return Costo del trayecto (puede ser negativo si hay subsidio).
+     * return Costo del trayecto (puede ser negativo si hay subsidio).
      */
     public double getCosto()      { return costo; }
 
@@ -120,7 +120,7 @@ public class Ruta {
      *
      * Complejidad: O(1) / Θ(1) / Ω(1)
      *
-     * @return Número de transbordos.
+     * return Número de transbordos.
      */
     public int getTransbordo() { return transbordo; }
 }

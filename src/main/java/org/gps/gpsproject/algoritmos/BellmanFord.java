@@ -44,11 +44,11 @@ public class BellmanFord {
      *   Omega: Ω(E) — si en la primera iteración ya no hay cambios (grafo trivial o
      *       conexión directa), la optimización de parada temprana detiene el algoritmo.
      *
-     * @param grafo    El grafo de transporte sobre el que se calcula el camino.
-     * @param origen   Parada de inicio de la búsqueda.
-     * @param destino  Parada de destino de la búsqueda.
-     * @param criterio Criterio de peso a minimizar (TIEMPO, COSTO, DISTANCIA, TRANSBORDOS).
-     * @return Lista ordenada de paradas desde origen hasta destino,
+     * param grafo    El grafo de transporte sobre el que se calcula el camino.
+     * param origen   Parada de inicio de la búsqueda.
+     * param destino  Parada de destino de la búsqueda.
+     * param criterio Criterio de peso a minimizar (TIEMPO, COSTO, DISTANCIA, TRANSBORDOS).
+     * return Lista ordenada de paradas desde origen hasta destino,
      *         o lista vacía si no existe camino o se detectó un ciclo negativo.
      */
     public static List<Parada> caminoMasCorto(GrafoTransporte grafo,
@@ -122,10 +122,10 @@ public class BellmanFord {
      *   Theta: Θ(k) — donde k es la longitud real del camino.
      *   Omega: Ω(1) — si origen y destino son adyacentes o no hay camino.
      *
-     * @param prev    Mapa de predecesores generado por Bellman-Ford.
-     * @param origen  Parada de inicio del camino.
-     * @param destino Parada final del camino.
-     * @return Lista ordenada de paradas del camino, o lista vacía si no existe.
+     * param prev    Mapa de predecesores generado por Bellman-Ford.
+     * param origen  Parada de inicio del camino.
+     * param destino Parada final del camino.
+     * return Lista ordenada de paradas del camino, o lista vacía si no existe.
      */
     private static List<Parada> reconstruir(Map<Parada, Parada> prev,
                                             Parada origen,
@@ -153,9 +153,9 @@ public class BellmanFord {
      *   Big Θ: Θ(1)
      *   Big Ω: Ω(1)
      *
-     * @param ruta     La ruta de la que se extrae el peso.
-     * @param criterio Criterio que determina qué atributo usar como peso.
-     * @return El valor numérico del peso correspondiente al criterio.
+     * param ruta     La ruta de la que se extrae el peso.
+     * param criterio Criterio que determina qué atributo usar como peso.
+     * return El valor numérico del peso correspondiente al criterio.
      */
     private static double getPeso(Ruta ruta, Criterio criterio) {
         return switch (criterio) {

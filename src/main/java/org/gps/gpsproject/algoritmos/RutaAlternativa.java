@@ -44,10 +44,10 @@ public class RutaAlternativa {
      *   Omega: Ω(1) — si origen == destino se retorna de inmediato sin
      *       recorrer el grafo.
      *
-     * @param grafo   El grafo de transporte sobre el que se ejecuta BFS.
-     * @param origen  Parada desde donde inicia la búsqueda.
-     * @param destino Parada que se desea alcanzar.
-     * @return Lista ordenada de paradas desde origen hasta destino con
+     * param grafo   El grafo de transporte sobre el que se ejecuta BFS.
+     * param origen  Parada desde donde inicia la búsqueda.
+     * param destino Parada que se desea alcanzar.
+     * return Lista ordenada de paradas desde origen hasta destino con
      *         el mínimo número de saltos, o lista vacía si no existe camino
      *         o si origen y destino son la misma parada.
      */
@@ -95,10 +95,10 @@ public class RutaAlternativa {
      *   Theta: Θ(k) — donde k es la longitud real del camino encontrado.
      *   Omega: Ω(1) — si origen y destino son adyacentes, el camino tiene longitud 2.
      *
-     * @param padre   Mapa de predecesores generado por BFS (parada → parada desde la que se llegó).
-     * @param origen  Parada de inicio del camino.
-     * @param destino Parada de destino del camino.
-     * @return Lista ordenada de paradas del camino desde origen hasta destino.
+     * param padre   Mapa de predecesores generado por BFS (parada → parada desde la que se llegó).
+     * param origen  Parada de inicio del camino.
+     * param destino Parada de destino del camino.
+     * return Lista ordenada de paradas del camino desde origen hasta destino.
      */
     private static List<Parada> reconstruir(Map<Parada, Parada> padre,
                                             Parada origen,

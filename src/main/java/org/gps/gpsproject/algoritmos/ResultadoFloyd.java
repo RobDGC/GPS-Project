@@ -30,9 +30,9 @@ public class ResultadoFloyd {
      *   Theta: Θ(1)
      *   Omega: Ω(1)
      *
-     * @param aristas  Matriz de distancias mínimas entre todos los pares.
-     * @param nodos    Matriz de siguientes nodos para reconstruir caminos.
-     * @param paradas Lista de paradas incluidas en el cálculo.
+     * param aristas  Matriz de distancias mínimas entre todos los pares.
+     * param nodos    Matriz de siguientes nodos para reconstruir caminos.
+     * param paradas Lista de paradas incluidas en el cálculo.
      */
     public ResultadoFloyd(Map<Parada, Map<Parada, Double>> aristas,
                           Map<Parada, Map<Parada, Parada>> nodos,
@@ -50,13 +50,12 @@ public class ResultadoFloyd {
      *   Theta: Θ(1)
      *   Omega: Ω(1)
      *
-     * @param origen  Parada de inicio.
-     * @param destino Parada de llegada.
-     * @return El costo mínimo acumulado, o Double.MAX_VALUE si no hay camino.
+     * param origen  Parada de inicio.
+     * param destino Parada de llegada.
+     * return El costo mínimo acumulado, o Double.MAX_VALUE si no hay camino.
      */
     public double getDistancia(Parada origen, Parada destino) {
-        return aristas.getOrDefault(origen, Collections.emptyMap())
-                .getOrDefault(destino, Double.MAX_VALUE);
+        return aristas.getOrDefault(origen, Collections.emptyMap()).getOrDefault(destino, Double.MAX_VALUE);
     }
 
     /*
@@ -70,9 +69,9 @@ public class ResultadoFloyd {
      *   Theta: Θ(k) — donde k es la longitud real del camino reconstruido.
      *   Omega: Ω(1) — si no existe camino, retorna inmediatamente.
      *
-     * @param origen  Parada de inicio del camino.
-     * @param destino Parada de destino del camino.
-     * @return Lista ordenada de paradas desde origen hasta destino,
+     * param origen  Parada de inicio del camino.
+     * param destino Parada de destino del camino.
+     * return Lista ordenada de paradas desde origen hasta destino,
      *         o lista vacía si no existe camino.
      */
     public List<Parada> getCamino(Parada origen, Parada destino) {
@@ -105,7 +104,7 @@ public class ResultadoFloyd {
      *   Theta: Θ(1)
      *   Omega: Ω(1)
      *
-     * @return Lista inmutable de paradas del grafo.
+     * return Lista inmutable de paradas del grafo.
      */
     public List<Parada> getParadas() {
         return Collections.unmodifiableList(paradas);
@@ -119,7 +118,7 @@ public class ResultadoFloyd {
      *   Theta: Θ(1)
      *   Omega: Ω(1)
      *
-     * @return Mapa inmutable de parada → (parada → distancia mínima).
+     * return Mapa inmutable de parada → (parada → distancia mínima).
      */
     public Map<Parada, Map<Parada, Double>> getTodasDistancias() {
         return Collections.unmodifiableMap(aristas);
