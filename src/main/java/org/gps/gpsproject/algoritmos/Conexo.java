@@ -110,7 +110,11 @@ public class Conexo {
      */
     private static Map<Parada, List<Parada>> invertirGrafo(Map<Parada, List<Ruta>> mapa) {
         Map<Parada, List<Parada>> invertido = new HashMap<>();
-        for (Parada p : mapa.keySet()) invertido.put(p, new ArrayList<>());
+        for (Parada p : mapa.keySet()) {
+   //       mapa.get(p).reversed();
+            invertido.put(p, new ArrayList<>());
+
+        }
 
         for (Map.Entry<Parada, List<Ruta>> entry : mapa.entrySet()) {
             Parada origen = entry.getKey();

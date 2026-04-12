@@ -55,8 +55,7 @@ public class ResultadoFloyd {
      * return El costo mínimo acumulado, o Double.MAX_VALUE si no hay camino.
      */
     public double getDistancia(Parada origen, Parada destino) {
-        return aristas.getOrDefault(origen, Collections.emptyMap())
-                .getOrDefault(destino, Double.MAX_VALUE);
+        return aristas.getOrDefault(origen, Collections.emptyMap()).getOrDefault(destino, Double.MAX_VALUE);
     }
 
     /*
