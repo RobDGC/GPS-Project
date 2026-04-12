@@ -364,12 +364,12 @@ public class MapaControlador {
             default           -> Criterio.TIEMPO;
         };
 
-        // 🔥 Detectar pesos negativos
+        //  Detectar pesos negativos
         boolean hayPesosNegativos = grafo.existeRutaNegativa(criterio);
 
         List<Parada> camino;
 
-        // 🔥 FORZAR Bellman-Ford si hay costos negativos
+        //  FORZAR Bellman-Ford si hay costos negativos
         if (criterio == Criterio.COSTO && hayPesosNegativos) {
 
             if (algoritmo.equals("Dijkstra")) {
